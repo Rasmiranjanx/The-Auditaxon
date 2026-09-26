@@ -1,0 +1,12 @@
+const express = require("express");
+const { loginAdmin, getMe, forgotPassword, resetPassword } = require("../controllers/authController");
+const { protect } = require("../middleware/authMiddleware");
+
+const router = express.Router();
+
+router.post("/login", loginAdmin);
+router.get("/me", protect, getMe);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password/:token", resetPassword);
+
+module.exports = router;
