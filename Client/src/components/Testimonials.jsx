@@ -38,7 +38,11 @@ const Testimonials = () => {
               className="card-on-dark flex w-full flex-col p-7 md:w-[calc((100%_-_1.5rem)/2)] lg:w-[calc((100%_-_3rem)/3)]"
             >
               <div className="flex items-center justify-between gap-4">
-                <Quote size={28} strokeWidth={1.5} className="shrink-0 fill-gold-400/15 text-gold-400" />
+                <Quote
+                  size={28}
+                  strokeWidth={1.5}
+                  className="shrink-0 fill-gold-400/15 text-gold-400"
+                />
                 <div className="flex gap-1" role="img" aria-label={`Rated ${r.rating} out of 5`}>
                   {[...Array(5)].map((_, i) => (
                     <Star

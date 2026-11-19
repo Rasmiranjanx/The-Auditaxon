@@ -142,7 +142,7 @@ const Careers = () => {
 
             <div className="mt-10">
               <h3 className="text-lg font-semibold text-ink">How to apply</h3>
-              <ol className="mt-6">
+              <ol role="list" className="mt-6">
                 {applySteps.map((step, index) => (
                   <li key={step.title} className="relative flex gap-4 pb-7 last:pb-0">
                     {index < applySteps.length - 1 && (
@@ -169,7 +169,7 @@ const Careers = () => {
                 <p className="text-sm leading-relaxed text-slate-600">
                   <span className="block font-semibold text-ink">Prefer email?</span>
                   Write to{' '}
-                  <a href={`mailto:${siteConfig.contact.careersEmail}`} className="link break-all">
+                  <a href={`mailto:${siteConfig.contact.careersEmail}`} className="link">
                     {siteConfig.contact.careersEmail}
                   </a>
                 </p>
@@ -181,13 +181,19 @@ const Careers = () => {
           <div className="lg:col-span-7">
             <div className="card p-6 sm:p-8">
               <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                <h3 className="text-lg font-semibold text-ink">Application form</h3>
+                <h3 id="careers-form-title" className="text-lg font-semibold text-ink">
+                  Application form
+                </h3>
                 <p className="text-xs text-slate-500">
                   Fields marked <span className="font-semibold text-gold-700">*</span> are required
                 </p>
               </div>
 
-              <form onSubmit={handleSubmit} className="mt-7 space-y-8">
+              <form
+                onSubmit={handleSubmit}
+                aria-labelledby="careers-form-title"
+                className="mt-7 space-y-8"
+              >
                 <fieldset className="min-w-0">
                   <GroupLegend>Personal details</GroupLegend>
                   <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">

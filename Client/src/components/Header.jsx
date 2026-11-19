@@ -36,12 +36,18 @@ const Header = () => {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,var(--color-navy-700)_0%,transparent_60%)]"
       />
-      <div aria-hidden="true" className="pattern-hex pattern-fade pointer-events-none absolute inset-0" />
+      <div
+        aria-hidden="true"
+        className="pattern-hex pattern-fade pointer-events-none absolute inset-0"
+      />
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,var(--color-gold-500)_0%,transparent_55%)] opacity-[0.14]"
       />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gold-500/20" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gold-500/20"
+      />
 
       <div className="relative container-page flex flex-1 flex-col">
         <div className="grid flex-1 items-center gap-12 py-10 lg:grid-cols-12 lg:gap-10 lg:py-14">
@@ -127,7 +133,10 @@ const Header = () => {
         {/* Pillars strip */}
         <ul className="grid gap-6 border-t border-white/10 py-8 md:grid-cols-3 md:gap-8 lg:py-10">
           {pillars.map(({ title, text, icon: Icon }) => (
-            <li key={title} className="flex items-start gap-4 md:flex-col md:gap-3 lg:flex-row lg:gap-4">
+            <li
+              key={title}
+              className="flex items-start gap-4 md:flex-col md:gap-3 lg:flex-row lg:gap-4"
+            >
               <span className="icon-tile-on-dark h-11 w-11">
                 <Icon size={20} strokeWidth={1.75} />
               </span>
