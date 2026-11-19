@@ -73,7 +73,7 @@ const ForgotPassword = () => {
       {/* Form column */}
       <main className="flex min-h-dvh flex-col px-5 py-6 sm:px-8 lg:py-10 xl:px-12 xl:py-14">
         <div className="mx-auto flex w-full max-w-md items-center lg:min-h-14">
-          <Link to="/" className="link inline-flex min-h-10 items-center gap-1.5 text-sm">
+          <Link to="/" className="link -mx-2 inline-flex min-h-10 items-center gap-1.5 px-2 text-sm">
             <ArrowLeft size={16} aria-hidden="true" />
             Back to website
           </Link>
@@ -125,7 +125,7 @@ const ForgotPassword = () => {
               </button>
 
               <p className="text-center text-sm">
-                <Link to="/login" className="link inline-flex min-h-10 items-center">
+                <Link to="/login" className="link inline-flex min-h-10 items-center px-2">
                   Back to login
                 </Link>
               </p>
