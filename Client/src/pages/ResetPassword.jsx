@@ -103,7 +103,7 @@ const ResetPassword = () => {
 
             <form onSubmit={handleSubmit} className="mt-8 space-y-5">
               {status.success && (
-                <div role="status" className="alert alert-success">
+                <div role="alert" className="alert alert-success">
                   <CircleCheck size={18} aria-hidden="true" className="mt-px shrink-0" />
                   <p>Password reset! Redirecting to login…</p>
                 </div>

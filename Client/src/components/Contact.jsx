@@ -72,7 +72,9 @@ const socialLinks = [
 ].filter((social) => hasValue(social.href))
 
 // Only confirmed details render; "TODO" placeholders in the site config stay hidden.
-const phoneNumbers = [siteConfig.contact.phone, siteConfig.contact.mobile].filter(hasValue)
+const phoneNumbers = [
+  ...new Set([siteConfig.contact.phone, siteConfig.contact.mobile].filter(hasValue)),
+]
 const officeLines = [
   siteConfig.location.addressLine1,
   hasValue(siteConfig.location.addressLine2)
@@ -97,7 +99,7 @@ const AddressLine = ({ text }) => (
 )
 
 const infoLabelClass = 'text-xs font-semibold tracking-wider text-slate-600 uppercase'
-const infoLinkClass = 'link -my-2 inline-block py-2 [overflow-wrap:anywhere]'
+const infoLinkClass = 'link -mx-1 -my-2 inline-block px-1 py-2 [overflow-wrap:anywhere]'
 
 const InfoRow = ({ icon: Icon, label, aside, children }) => (
   <li className="flex items-start gap-4">
@@ -190,7 +192,7 @@ const Contact = () => {
                     href={mapsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="link -mb-2 inline-flex items-center gap-1 py-2 text-sm"
+                    className="link -mx-1 -mb-2.5 inline-flex items-center gap-1 px-1 py-2.5 text-sm"
                   >
                     View on Google Maps
                     <ArrowUpRight size={15} aria-hidden="true" />

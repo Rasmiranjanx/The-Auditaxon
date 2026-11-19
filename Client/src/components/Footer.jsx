@@ -80,7 +80,9 @@ const socialLinks = [
 ].filter((social) => hasValue(social.href))
 
 // Only confirmed details render; "TODO" placeholders in the site config stay hidden.
-const phoneNumbers = [siteConfig.contact.phone, siteConfig.contact.mobile].filter(hasValue)
+const phoneNumbers = [
+  ...new Set([siteConfig.contact.phone, siteConfig.contact.mobile].filter(hasValue)),
+]
 const officeLines = [
   siteConfig.location.addressLine1,
   hasValue(siteConfig.location.addressLine2)
@@ -112,7 +114,7 @@ const shortDescription =
 const headingClass = 'text-sm font-semibold tracking-wide text-white'
 const focusRing =
   'focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:outline-none'
-const linkClass = `inline-flex min-h-10 items-center text-sm text-navy-200 transition-colors duration-200 hover:text-white ${focusRing}`
+const linkClass = `-mx-1.5 inline-flex min-h-10 min-w-10 items-center px-1.5 text-sm text-navy-200 transition-colors duration-200 hover:text-white ${focusRing}`
 const iconClass = 'shrink-0 text-gold-400'
 
 const Footer = () => {
@@ -190,7 +192,10 @@ const Footer = () => {
             <h2 className={headingClass}>Contact</h2>
             <ul className="mt-3 space-y-1 text-sm">
               <li>
-                <a href={`mailto:${siteConfig.contact.primaryEmail}`} className={`${linkClass} gap-3`}>
+                <a
+                  href={`mailto:${siteConfig.contact.primaryEmail}`}
+                  className={`${linkClass} gap-3`}
+                >
                   <Mail size={16} className={iconClass} aria-hidden="true" />
                   <span className="min-w-0 [overflow-wrap:anywhere]">
                     {siteConfig.contact.primaryEmail}
@@ -240,7 +245,7 @@ const Footer = () => {
           </p>
           <Link
             to="/login"
-            className={`inline-flex min-h-10 items-center self-start text-navy-400 transition-colors duration-200 hover:text-white sm:self-auto ${focusRing}`}
+            className={`-mx-1.5 inline-flex min-h-10 items-center self-start px-1.5 text-navy-400 transition-colors duration-200 hover:text-white sm:self-auto ${focusRing}`}
           >
             Admin login
           </Link>

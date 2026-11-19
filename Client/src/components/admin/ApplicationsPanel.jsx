@@ -1,15 +1,36 @@
 import React, { useState, useEffect } from 'react'
 import api from '../../lib/api'
-import { FileText, Mail, Phone } from 'lucide-react'
+import { FileText, Mail, Phone, Briefcase, CircleAlert } from 'lucide-react'
 
 const statusOptions = ['received', 'shortlisted', 'rejected', 'hired']
 
 const statusColors = {
-  received: 'bg-slate-700 text-slate-200',
-  shortlisted: 'bg-blue-900 text-blue-300',
-  rejected: 'bg-red-900 text-red-300',
-  hired: 'bg-green-900 text-green-300',
+  received: 'badge-gold',
+  shortlisted: 'badge-navy',
+  rejected: 'badge-red',
+  hired: 'badge-green',
 }
+
+// Card header used by the loading, error and loaded states (presentational only)
+const PanelHeader = ({ count, children }) => (
+  <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-3 border-b border-slate-200 px-4 py-4 sm:px-6">
+    <div className="min-w-0">
+      <div className="flex flex-wrap items-center gap-2.5">
+        <h2 className="text-lg font-semibold text-ink">Job Applications</h2>
+        {count !== undefined && (
+          <span className="badge badge-slate">
+            {count}
+            <span className="sr-only"> applications</span>
+          </span>
+        )}
+      </div>
+      <p className="mt-1 text-sm text-slate-500">
+        Applications submitted through the careers form on the website.
+      </p>
+    </div>
+    {children}
+  </div>
+)
 
 const ApplicationsPanel = () => {
   const [applications, setApplications] = useState([])
@@ -49,119 +70,192 @@ const ApplicationsPanel = () => {
   }
 
   if (loading) {
-    return <p className="text-slate-400">Loading applications...</p>
+    return (
+      <div className="card overflow-hidden">
+        <PanelHeader />
+        <p role="status" className="px-6 py-16 text-center text-sm text-slate-500">
+          Loading applications…
+        </p>
+      </div>
+    )
   }
 
   if (error) {
-    return <p className="text-red-500">{error}</p>
+    return (
+      <div className="card overflow-hidden">
+        <PanelHeader />
+        <div className="p-4 sm:p-6">
+          <div role="alert" className="alert alert-error">
+            <CircleAlert size={18} aria-hidden="true" className="mt-px shrink-0" />
+            <p>{error}</p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h2
-          className="text-2xl font-bold text-white"
-          style={{
-            fontFamily: "'Playfair Display', serif",
-          }}
-        >
-          Job Applications
-        </h2>
+    <div className="card overflow-hidden">
+      <PanelHeader count={applications.length}>
+        <div className="flex items-center gap-2">
+          <label
+            htmlFor="applications-status-filter"
+            className="text-sm font-medium whitespace-nowrap text-slate-600"
+          >
+            Status
+          </label>
+          <select
+            id="applications-status-filter"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="form-control h-10 w-auto py-1.5 pr-9 pl-3 text-sm lg:h-9"
+          >
+            <option value="">All statuses</option>
 
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="bg-slate-900 border border-slate-700 text-white rounded-lg px-3 py-2 text-sm outline-none"
-        >
-          <option value="">All statuses</option>
-
-          {statusOptions.map((s) => (
-            <option key={s} value={s}>
-              {s.charAt(0).toUpperCase() + s.slice(1)}
-            </option>
-          ))}
-        </select>
-      </div>
+            {statusOptions.map((s) => (
+              <option key={s} value={s}>
+                {s.charAt(0).toUpperCase() + s.slice(1)}
+              </option>
+            ))}
+          </select>
+        </div>
+      </PanelHeader>
 
       {applications.length === 0 ? (
-        <p className="text-slate-400">No applications found.</p>
+        <div className="flex flex-col items-center px-6 py-16 text-center">
+          <Briefcase size={40} strokeWidth={1.5} aria-hidden="true" className="text-slate-300" />
+          <p className="mt-4 font-medium text-ink">No applications found.</p>
+          <p className="mt-1 text-sm text-slate-500">
+            Applications submitted through the careers form will appear here.
+          </p>
+        </div>
       ) : (
-        <div className="flex flex-col gap-4">
-          {applications.map((app) => (
-            <div key={app._id} className="p-5 rounded-lg border border-slate-800 bg-slate-900/30">
-              <div className="flex justify-between items-start mb-3">
-                <div>
-                  <h4 className="font-semibold text-white">
-                    {app.firstName} {app.lastName}
-                  </h4>
-
-                  {app.positionAppliedFor && (
-                    <p className="text-slate-400 text-sm">{app.positionAppliedFor}</p>
-                  )}
-                </div>
-
-                <span
-                  className={`text-xs px-3 py-1 rounded-full ${
-                    statusColors[app.status] || statusColors.received
-                  }`}
+        <div className="overflow-x-auto">
+          <table className="block w-full text-left text-sm lg:table">
+            <thead className="hidden border-b border-slate-200 bg-slate-50 text-xs tracking-wide text-slate-500 uppercase lg:table-header-group">
+              <tr>
+                <th scope="col" className="py-3 pr-4 pl-6 font-semibold">
+                  Candidate
+                </th>
+                <th scope="col" className="px-4 py-3 font-semibold">
+                  Contact
+                </th>
+                <th scope="col" className="px-4 py-3 font-semibold">
+                  Background
+                </th>
+                <th scope="col" className="px-4 py-3 font-semibold">
+                  Status
+                </th>
+                <th scope="col" className="py-3 pr-6 pl-4 text-right font-semibold">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="block divide-y divide-slate-100 lg:table-row-group">
+              {applications.map((app) => (
+                <tr
+                  key={app._id}
+                  className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-3 px-4 py-4 transition-colors duration-150 hover:bg-slate-50/70 sm:px-6 lg:table-row"
                 >
-                  {app.status}
-                </span>
-              </div>
+                  <th
+                    scope="row"
+                    className="min-w-0 text-left align-top font-normal lg:py-4 lg:pr-4 lg:pl-6"
+                  >
+                    <p className="font-semibold text-ink">
+                      {app.firstName} {app.lastName}
+                    </p>
 
-              <div className="flex flex-wrap gap-4 text-sm text-slate-400 mb-3">
-                <span className="flex items-center gap-1">
-                  <Mail size={14} />
-                  {app.email}
-                </span>
+                    {app.positionAppliedFor && (
+                      <p className="mt-0.5 text-slate-500">{app.positionAppliedFor}</p>
+                    )}
+                  </th>
 
-                <span className="flex items-center gap-1">
-                  <Phone size={14} />
-                  {app.mobileNo}
-                </span>
-              </div>
+                  <td className="col-span-2 space-y-1 align-top text-slate-600 lg:px-4 lg:py-4">
+                    <p className="flex items-start gap-1.5">
+                      <Mail
+                        size={14}
+                        aria-hidden="true"
+                        className="mt-[3px] shrink-0 text-slate-400"
+                      />
+                      <span className="wrap-break-word">{app.email}</span>
+                    </p>
 
-              {app.highestQualification && (
-                <p className="text-slate-500 text-xs mb-1">
-                  Qualification: {app.highestQualification}
-                </p>
-              )}
+                    <p className="flex items-center gap-1.5">
+                      <Phone size={14} aria-hidden="true" className="shrink-0 text-slate-400" />
+                      {app.mobileNo}
+                    </p>
+                  </td>
 
-              {app.lastCompany && (
-                <p className="text-slate-500 text-xs mb-1">Last company: {app.lastCompany}</p>
-              )}
+                  <td className="col-span-2 space-y-1 align-top text-slate-700 max-lg:empty:hidden lg:px-4 lg:py-4">
+                    {app.highestQualification && (
+                      <p>
+                        <span className="text-slate-500">Qualification:</span>{' '}
+                        {app.highestQualification}
+                      </p>
+                    )}
 
-              {(app.experienceYears || app.experienceMonths) && (
-                <p className="text-slate-500 text-xs mb-3">
-                  Experience: {app.experienceYears || 0}y {app.experienceMonths || 0}m
-                </p>
-              )}
+                    {app.lastCompany && (
+                      <p>
+                        <span className="text-slate-500">Last company:</span> {app.lastCompany}
+                      </p>
+                    )}
 
-              <div className="flex items-center gap-4 mt-3">
-                <a
-                  href={app.resumeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-blue-400 hover:text-blue-300 text-sm transition"
-                >
-                  <FileText size={16} />
-                  View Resume
-                </a>
+                    {(app.experienceYears || app.experienceMonths) && (
+                      <p>
+                        <span className="text-slate-500">Experience:</span>{' '}
+                        {app.experienceYears || 0}y {app.experienceMonths || 0}m
+                      </p>
+                    )}
+                  </td>
 
-                <select
-                  value={app.status}
-                  onChange={(e) => handleStatusChange(app._id, e.target.value)}
-                  className="bg-slate-900 border border-slate-700 text-white rounded-lg px-2 py-1 text-sm outline-none ml-auto"
-                >
-                  {statusOptions.map((s) => (
-                    <option key={s} value={s}>
-                      {s.charAt(0).toUpperCase() + s.slice(1)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          ))}
+                  <td className="col-start-2 row-start-1 justify-self-end align-top lg:px-4 lg:py-4">
+                    <span
+                      className={`badge capitalize ${
+                        statusColors[app.status] || statusColors.received
+                      }`}
+                    >
+                      {app.status}
+                    </span>
+                  </td>
+
+                  <td className="col-span-2 align-top lg:py-4 lg:pr-6 lg:pl-4">
+                    <div className="flex flex-wrap items-end justify-end gap-x-4 gap-y-2 lg:flex-col lg:flex-nowrap lg:gap-y-2.5">
+                      <a
+                        href={app.resumeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-outline btn-sm h-10 lg:h-8"
+                      >
+                        <FileText size={14} aria-hidden="true" />
+                        View resume
+                      </a>
+
+                      <div className="flex flex-col gap-1 xl:flex-row xl:items-center xl:gap-2">
+                        <label
+                          htmlFor={`application-status-${app._id}`}
+                          className="text-xs font-medium whitespace-nowrap text-slate-500"
+                        >
+                          Set status
+                        </label>
+                        <select
+                          id={`application-status-${app._id}`}
+                          value={app.status}
+                          onChange={(e) => handleStatusChange(app._id, e.target.value)}
+                          className="form-control h-10 w-auto py-1 pr-8 pl-2.5 text-sm lg:h-8"
+                        >
+                          {statusOptions.map((s) => (
+                            <option key={s} value={s}>
+                              {s.charAt(0).toUpperCase() + s.slice(1)}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

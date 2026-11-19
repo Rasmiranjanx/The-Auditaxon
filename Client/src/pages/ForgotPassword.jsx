@@ -92,7 +92,7 @@ const ForgotPassword = () => {
 
             <form onSubmit={handleSubmit} className="mt-8 space-y-5">
               {status.success && (
-                <div role="status" className="alert alert-success">
+                <div role="alert" className="alert alert-success">
                   <CircleCheck size={18} aria-hidden="true" className="mt-px shrink-0" />
                   <p>If that email exists, a reset link has been sent.</p>
                 </div>
