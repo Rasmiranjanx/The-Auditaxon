@@ -180,14 +180,14 @@ const Careers = () => {
           {/* Application form */}
           <div className="lg:col-span-7">
             <div className="card p-6 sm:p-8">
-              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-slate-100 pb-5">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                 <h3 className="text-lg font-semibold text-ink">Application form</h3>
                 <p className="text-xs text-slate-500">
                   Fields marked <span className="font-semibold text-gold-700">*</span> are required
                 </p>
               </div>
 
-              <form onSubmit={handleSubmit} className="mt-6 space-y-8">
+              <form onSubmit={handleSubmit} className="mt-7 space-y-8">
                 <fieldset className="min-w-0">
                   <GroupLegend>Personal details</GroupLegend>
                   <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
