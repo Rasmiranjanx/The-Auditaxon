@@ -10,20 +10,20 @@ import Contact from '../components/Contact'
 import Footer from '../components/Footer'
 
 const Home = () => {
-    return (
-        <>
-            <Header />
-            <About />
-            <Services />
-            <Team />
-            <Careers />
-            <Testimonials />
-            <Contact />
-            <ReviewForm />
+  return (
+    <>
+      <Header />
+      <About />
+      <Services />
+      <Team />
+      <Careers />
+      <Testimonials />
+      <Contact />
+      <ReviewForm />
 
-            <Footer />
-        </>
-    )
+      <Footer />
+    </>
+  )
 }
 
 export default Home

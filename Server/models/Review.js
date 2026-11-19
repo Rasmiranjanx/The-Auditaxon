@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -9,6 +9,6 @@ const reviewSchema = new mongoose.Schema(
     isApproved: { type: Boolean, default: false },
   },
   { timestamps: true }
-);
+)
 
-module.exports = mongoose.model("Review", reviewSchema);
+module.exports = mongoose.model('Review', reviewSchema)

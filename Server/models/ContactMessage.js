@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
 const contactMessageSchema = new mongoose.Schema(
   {
@@ -10,6 +10,6 @@ const contactMessageSchema = new mongoose.Schema(
     isRead: { type: Boolean, default: false },
   },
   { timestamps: true }
-);
+)
 
-module.exports = mongoose.model("ContactMessage", contactMessageSchema);
+module.exports = mongoose.model('ContactMessage', contactMessageSchema)

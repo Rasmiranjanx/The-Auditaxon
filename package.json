@@ -1,0 +1,16 @@
+{
+  "name": "the-auditaxon-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Auditaxon - Chartered Accountancy, Tax & Audit Firm Website",
+  "scripts": {
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"blue.bold,green.bold\" \"npm --prefix Server run dev\" \"npm --prefix Client run dev\"",
+    "build": "npm --prefix Client run build",
+    "lint": "concurrently -n \"SERVER,CLIENT\" -c \"blue.bold,green.bold\" \"npm --prefix Server run lint\" \"npm --prefix Client run lint\"",
+    "format": "prettier --write \"Client/src/**/*.{js,jsx,css,html}\" \"Server/**/*.js\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "prettier": "^3.5.3"
+  }
+}

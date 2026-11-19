@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
 const teamMemberSchema = new mongoose.Schema(
   {
@@ -6,7 +6,7 @@ const teamMemberSchema = new mongoose.Schema(
     role: { type: String, required: true, trim: true }, // e.g. "Partner", "Associate"
     category: {
       type: String,
-      enum: ["partner", "associate"],
+      enum: ['partner', 'associate'],
       required: true,
       index: true,
     },
@@ -20,6 +20,6 @@ const teamMemberSchema = new mongoose.Schema(
     isActive: { type: Boolean, default: true },
   },
   { timestamps: true }
-);
+)
 
-module.exports = mongoose.model("TeamMember", teamMemberSchema);
+module.exports = mongoose.model('TeamMember', teamMemberSchema)
