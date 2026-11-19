@@ -86,7 +86,7 @@ const ForgotPassword = () => {
             <h1 className="font-display text-3xl font-semibold tracking-tight text-ink">
               Forgot Password
             </h1>
-            <p className="mt-2 text-base text-slate-600">
+            <p className="mt-2 text-base text-pretty text-slate-600">
               Enter your email and we'll send you a reset link.
             </p>
 

@@ -97,7 +97,9 @@ const ResetPassword = () => {
             <h1 className="font-display text-3xl font-semibold tracking-tight text-ink">
               Reset Password
             </h1>
-            <p className="mt-2 text-base text-slate-600">Enter your new password below.</p>
+            <p className="mt-2 text-base text-pretty text-slate-600">
+              Enter your new password below.
+            </p>
 
             <form onSubmit={handleSubmit} className="mt-8 space-y-5">
               {status.success && (
