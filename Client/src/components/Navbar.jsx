@@ -40,7 +40,7 @@ const Navbar = () => {
         <a
           href="#home"
           onClick={() => setIsOpen(false)}
-          className="-m-1 rounded-lg p-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+          className="-m-1 flex rounded-lg p-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
         >
           <BrandMark onDark={!solid} />
         </a>

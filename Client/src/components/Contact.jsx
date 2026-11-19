@@ -84,7 +84,7 @@ const toTelHref = (number) => `tel:${number.replace(/[^\d+]/g, '')}`
 
 // Address lines wrap only after commas, so phrases such as "Puri Canal Rd" stay together.
 const AddressLine = ({ text }) => (
-  <span className="block">
+  <span className="block text-balance">
     {text.split(', ').map((part, index, parts) => (
       <React.Fragment key={`${index}-${part}`}>
         {index > 0 && ' '}
@@ -245,7 +245,7 @@ const Contact = () => {
           <div className="lg:col-span-7">
             <div className="card p-6 sm:p-8">
               <h3 className="font-display text-2xl font-semibold text-ink">Send us a message</h3>
-              <p className="mt-2 text-sm text-slate-600">
+              <p className="mt-2 text-sm text-pretty text-slate-600">
                 All fields are required unless marked optional.
               </p>
 

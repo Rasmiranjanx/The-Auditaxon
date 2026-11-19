@@ -92,7 +92,7 @@ const toTelHref = (number) => `tel:${number.replace(/[^\d+]/g, '')}`
 
 // Address lines wrap only after commas, so phrases such as "Puri Canal Rd" stay together.
 const AddressLine = ({ text }) => (
-  <span className="block">
+  <span className="block text-balance">
     {text.split(', ').map((part, index, parts) => (
       <React.Fragment key={`${index}-${part}`}>
         {index > 0 && ' '}
@@ -119,9 +119,9 @@ const Footer = () => {
   return (
     <footer className="bg-navy-950 pt-16 pb-8 text-navy-200">
       <div className="container-page">
-        <div className="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3 lg:grid-cols-12 lg:gap-x-10">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,0.7fr)_minmax(0,1fr)_minmax(0,1.5fr)] lg:gap-x-8">
           {/* Brand */}
-          <div className="col-span-2 md:col-span-3 lg:col-span-4">
+          <div className="col-span-2 md:col-span-3 lg:col-span-1">
             <a
               href="#home"
               aria-label={`${siteConfig.name}, back to top`}
@@ -154,7 +154,7 @@ const Footer = () => {
           </div>
 
           {/* Quick links */}
-          <nav aria-labelledby="footer-quick-links" className="lg:col-span-2">
+          <nav aria-labelledby="footer-quick-links">
             <h2 id="footer-quick-links" className={headingClass}>
               Quick links
             </h2>
@@ -170,7 +170,7 @@ const Footer = () => {
           </nav>
 
           {/* Services */}
-          <nav aria-labelledby="footer-services" className="lg:col-span-3">
+          <nav aria-labelledby="footer-services">
             <h2 id="footer-services" className={headingClass}>
               Services
             </h2>
@@ -186,7 +186,7 @@ const Footer = () => {
           </nav>
 
           {/* Contact */}
-          <div className="col-span-2 md:col-span-1 lg:col-span-3">
+          <div className="col-span-2 md:col-span-1">
             <h2 className={headingClass}>Contact</h2>
             <ul className="mt-3 space-y-1 text-sm">
               <li>
