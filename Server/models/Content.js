@@ -41,7 +41,7 @@ const contentSchema = new mongoose.Schema(
 );
 
 // Auto-generate a unique slug from the title if one wasn't given
-contentSchema.pre("validate", async function (next) {
+contentSchema.pre("validate", async function () {
   if (!this.slug && this.title) {
     let base = slugify(this.title, { lower: true, strict: true });
     let slug = base;
@@ -52,7 +52,6 @@ contentSchema.pre("validate", async function (next) {
     }
     this.slug = slug;
   }
-  next();
 });
 
 contentSchema.index({ type: 1, category: 1, order: 1 });
