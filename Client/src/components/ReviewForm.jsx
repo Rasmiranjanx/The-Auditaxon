@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import api from '../lib/api'
-import { Star } from 'lucide-react'
+import { Star, CircleCheck, CircleAlert } from 'lucide-react'
+import SectionHeader from './ui/SectionHeader'
 
 const ReviewForm = () => {
   const [formData, setFormData] = useState({ name: '', role: '', message: '', rating: 0 })
@@ -35,86 +36,114 @@ const ReviewForm = () => {
   }
 
   return (
-    <div id="review" className="py-20 px-6 md:px-20 lg:px-32 bg-white">
-      <div className="text-center mb-10">
-        <h2
-          className="text-3xl md:text-4xl font-bold text-slate-900"
-          style={{ fontFamily: "'Playfair Display', serif" }}
-        >
-          Share Your Experience
-        </h2>
-        <p className="text-slate-500 mt-3 max-w-2xl mx-auto">
-          Worked with us? Let others know how it went.
-        </p>
-      </div>
+    <section id="feedback" className="section bg-paper">
+      <div className="container-page">
+        <div className="card mx-auto max-w-2xl p-6 sm:p-10">
+          <SectionHeader
+            eyebrow="Feedback"
+            title="Share Your Experience"
+            lead="Worked with us? Let others know how it went."
+          />
 
-      <form onSubmit={handleSubmit} className="max-w-xl mx-auto flex flex-col gap-4">
-        <div className="flex justify-center gap-2">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button
-              key={star}
-              type="button"
-              onClick={() => setFormData({ ...formData, rating: star })}
-              onMouseEnter={() => setHoverRating(star)}
-              onMouseLeave={() => setHoverRating(0)}
-            >
-              <Star
-                size={32}
-                className={
-                  star <= (hoverRating || formData.rating)
-                    ? 'text-amber-400 fill-amber-400'
-                    : 'text-slate-300'
-                }
-              />
+          <form
+            onSubmit={handleSubmit}
+            className="mt-8 flex flex-col gap-5 border-t border-slate-100 pt-8"
+          >
+            <fieldset>
+              <legend className="form-label">Your rating</legend>
+              <div className="-ml-1.5 flex items-center gap-0.5">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    aria-label={`Rate ${star} out of 5`}
+                    aria-pressed={formData.rating === star}
+                    onClick={() => setFormData({ ...formData, rating: star })}
+                    onMouseEnter={() => setHoverRating(star)}
+                    onMouseLeave={() => setHoverRating(0)}
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:ring-navy-600 focus-visible:outline-none"
+                  >
+                    <Star
+                      size={28}
+                      strokeWidth={1.5}
+                      className={
+                        star <= (hoverRating || formData.rating)
+                          ? 'fill-gold-500 text-gold-500 transition-colors duration-150'
+                          : 'text-slate-400 transition-colors duration-150'
+                      }
+                    />
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="review-name" className="form-label">
+                  Your name
+                </label>
+                <input
+                  id="review-name"
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  className="form-control"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="review-role" className="form-label">
+                  Role / company <span className="font-normal text-slate-500">(optional)</span>
+                </label>
+                <input
+                  id="review-role"
+                  type="text"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className="form-control"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="review-message" className="form-label">
+                Your review
+              </label>
+              <textarea
+                id="review-message"
+                name="message"
+                placeholder="Tell us about your experience"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                rows={4}
+                className="form-control resize-none"
+              ></textarea>
+            </div>
+
+            <button type="submit" disabled={status.loading} className="btn btn-primary mt-1 w-full">
+              {status.loading ? 'Submitting...' : 'Submit Review'}
             </button>
-          ))}
+
+            {status.success && (
+              <div role="status" className="alert alert-success">
+                <CircleCheck size={18} className="mt-px shrink-0" />
+                <p>Thank you! Your review will appear once approved.</p>
+              </div>
+            )}
+            {status.error && (
+              <div role="alert" className="alert alert-error">
+                <CircleAlert size={18} className="mt-px shrink-0" />
+                <p>{status.error}</p>
+              </div>
+            )}
+          </form>
         </div>
-
-        <input
-          type="text"
-          name="name"
-          placeholder="Your Name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-          className="border border-slate-200 rounded-lg px-4 py-3 outline-none focus:border-slate-900 transition"
-        />
-
-        <input
-          type="text"
-          name="role"
-          placeholder="Your Role / Company (optional)"
-          value={formData.role}
-          onChange={handleChange}
-          className="border border-slate-200 rounded-lg px-4 py-3 outline-none focus:border-slate-900 transition"
-        />
-
-        <textarea
-          name="message"
-          placeholder="Tell us about your experience"
-          value={formData.message}
-          onChange={handleChange}
-          required
-          rows={4}
-          className="border border-slate-200 rounded-lg px-4 py-3 outline-none focus:border-slate-900 transition resize-none"
-        ></textarea>
-
-        <button
-          type="submit"
-          disabled={status.loading}
-          className="bg-slate-900 hover:bg-slate-800 transition text-white px-8 py-3 font-semibold disabled:opacity-50"
-        >
-          {status.loading ? 'Submitting...' : 'Submit Review'}
-        </button>
-
-        {status.success && (
-          <p className="text-green-600 text-sm text-center">
-            Thank you! Your review will appear once approved.
-          </p>
-        )}
-        {status.error && <p className="text-red-600 text-sm text-center">{status.error}</p>}
-      </form>
-    </div>
+      </div>
+    </section>
   )
 }
 

@@ -1,14 +1,17 @@
 import React from 'react'
-import { assets } from '../assets/assets'
-import { Mail, MapPin } from 'lucide-react'
-import siteConfig from '../config/site'
+import { Link } from 'react-router-dom'
+import { Clock, Mail, MapPin, Phone } from 'lucide-react'
+import siteConfig, { hasValue } from '../config/site'
+import BrandMark from './ui/BrandMark'
 
 const InstagramIcon = (props) => (
   <svg
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="2"
+    strokeWidth="1.75"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     width={props.size}
     height={props.size}
     aria-hidden="true"
@@ -24,7 +27,9 @@ const LinkedinIcon = (props) => (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="2"
+    strokeWidth="1.75"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     width={props.size}
     height={props.size}
     aria-hidden="true"
@@ -40,7 +45,9 @@ const FacebookIcon = (props) => (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="2"
+    strokeWidth="1.75"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     width={props.size}
     height={props.size}
     aria-hidden="true"
@@ -49,121 +56,195 @@ const FacebookIcon = (props) => (
   </svg>
 )
 
+const quickLinks = [
+  { label: 'About', href: '#about' },
+  { label: 'Services', href: '#services' },
+  { label: 'Team', href: '#team' },
+  { label: 'Careers', href: '#careers' },
+  { label: 'Contact', href: '#contact' },
+]
+
+const serviceTitles = [
+  'Direct Tax',
+  'Indirect Tax / GST',
+  'Audit & Assurance',
+  'Company Registration',
+  'Bookkeeping',
+  'Financial Advisory',
+]
+
+const socialLinks = [
+  { label: 'LinkedIn', href: siteConfig.socialLinks.linkedin, Icon: LinkedinIcon },
+  { label: 'Instagram', href: siteConfig.socialLinks.instagram, Icon: InstagramIcon },
+  { label: 'Facebook', href: siteConfig.socialLinks.facebook, Icon: FacebookIcon },
+].filter((social) => hasValue(social.href))
+
+// Only confirmed details render; "TODO" placeholders in the site config stay hidden.
+const phoneNumbers = [siteConfig.contact.phone, siteConfig.contact.mobile].filter(hasValue)
+const officeLines = [
+  siteConfig.location.addressLine1,
+  hasValue(siteConfig.location.addressLine2)
+    ? siteConfig.location.addressLine2
+    : `${siteConfig.location.city}, ${siteConfig.location.state}`,
+].filter(hasValue)
+const firmRegistrationNumber = siteConfig.icai.firmRegistrationNumber
+const toTelHref = (number) => `tel:${number.replace(/[^\d+]/g, '')}`
+
+// Address lines wrap only after commas, so phrases such as "Puri Canal Rd" stay together.
+const AddressLine = ({ text }) => (
+  <span className="block">
+    {text.split(', ').map((part, index, parts) => (
+      <React.Fragment key={`${index}-${part}`}>
+        {index > 0 && ' '}
+        <span className={part.length <= 28 ? 'whitespace-nowrap' : undefined}>
+          {index < parts.length - 1 ? `${part},` : part}
+        </span>
+      </React.Fragment>
+    ))}
+  </span>
+)
+
+// The first sentence of the firm description makes a compact intro line.
+const sentenceEnd = siteConfig.description.indexOf('. ')
+const shortDescription =
+  sentenceEnd === -1 ? siteConfig.description : siteConfig.description.slice(0, sentenceEnd + 1)
+
+const headingClass = 'text-sm font-semibold tracking-wide text-white'
+const focusRing =
+  'focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:outline-none'
+const linkClass = `inline-flex min-h-10 items-center text-sm text-navy-200 transition-colors duration-200 hover:text-white ${focusRing}`
+const iconClass = 'shrink-0 text-gold-400'
+
 const Footer = () => {
   return (
-    <footer className="bg-black text-slate-400 pt-16 pb-8 px-6 md:px-20 lg:px-32">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
-        <div>
-          <div className="flex items-center gap-3 mb-4">
-            <img
-              src={assets.AuditLogo}
-              alt={siteConfig.name}
-              className="h-10 w-10 rounded-full object-cover border border-white/30"
-            />
-            <span
-              className="text-white text-lg font-semibold"
-              style={{ fontFamily: "'Playfair Display', serif" }}
+    <footer className="bg-navy-950 pt-16 pb-8 text-navy-200">
+      <div className="container-page">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3 lg:grid-cols-12 lg:gap-x-10">
+          {/* Brand */}
+          <div className="col-span-2 md:col-span-3 lg:col-span-4">
+            <a
+              href="#home"
+              aria-label={`${siteConfig.name}, back to top`}
+              className="inline-flex rounded-lg focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-4 focus-visible:ring-offset-navy-950 focus-visible:outline-none"
             >
-              {siteConfig.name}
-            </span>
+              <BrandMark onDark showTagline />
+            </a>
+            <p className="mt-6 text-sm font-medium text-white">{siteConfig.tagline}</p>
+            <p className="mt-2 max-w-md text-sm leading-relaxed text-navy-200/80">
+              {shortDescription}
+            </p>
+
+            {socialLinks.length > 0 && (
+              <ul className="mt-6 flex flex-wrap gap-3">
+                {socialLinks.map(({ label, href, Icon }) => (
+                  <li key={label}>
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${siteConfig.name} on ${label}`}
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-navy-200 transition-colors duration-200 hover:border-white/40 hover:bg-white/5 hover:text-white focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 focus-visible:outline-none"
+                    >
+                      <Icon size={18} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
-          <p className="text-sm">{siteConfig.tagline}</p>
-          <p className="text-xs text-slate-500 mt-2">
-            ICAI FRN: {siteConfig.icai.firmRegistrationNumber}
+
+          {/* Quick links */}
+          <nav aria-labelledby="footer-quick-links" className="lg:col-span-2">
+            <h2 id="footer-quick-links" className={headingClass}>
+              Quick links
+            </h2>
+            <ul className="mt-3">
+              {quickLinks.map((link) => (
+                <li key={link.href}>
+                  <a href={link.href} className={linkClass}>
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Services */}
+          <nav aria-labelledby="footer-services" className="lg:col-span-3">
+            <h2 id="footer-services" className={headingClass}>
+              Services
+            </h2>
+            <ul className="mt-3">
+              {serviceTitles.map((title) => (
+                <li key={title}>
+                  <a href="#services" className={linkClass}>
+                    {title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Contact */}
+          <div className="col-span-2 md:col-span-1 lg:col-span-3">
+            <h2 className={headingClass}>Contact</h2>
+            <ul className="mt-3 space-y-1 text-sm">
+              <li>
+                <a href={`mailto:${siteConfig.contact.primaryEmail}`} className={`${linkClass} gap-3`}>
+                  <Mail size={16} className={iconClass} aria-hidden="true" />
+                  <span className="min-w-0 [overflow-wrap:anywhere]">
+                    {siteConfig.contact.primaryEmail}
+                  </span>
+                </a>
+              </li>
+              {phoneNumbers.map((number) => (
+                <li key={number}>
+                  <a href={toTelHref(number)} className={`${linkClass} gap-3`}>
+                    <Phone size={16} className={iconClass} aria-hidden="true" />
+                    <span>{number}</span>
+                  </a>
+                </li>
+              ))}
+              <li className="flex gap-3 py-2">
+                <MapPin size={16} className={`${iconClass} mt-0.5`} aria-hidden="true" />
+                <address className="leading-relaxed not-italic">
+                  {officeLines.map((line) => (
+                    <AddressLine key={line} text={line} />
+                  ))}
+                </address>
+              </li>
+              <li className="flex gap-3 py-2">
+                <Clock size={16} className={`${iconClass} mt-0.5`} aria-hidden="true" />
+                <span>
+                  <span className="block">{siteConfig.businessHours.workingDaysLabel}</span>
+                  <span className="block text-navy-300">
+                    {siteConfig.businessHours.workingHoursLabel}
+                  </span>
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-12 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-navy-300 sm:flex-row sm:items-center sm:justify-between">
+          <p className="leading-relaxed">
+            &copy; {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
+            {hasValue(firmRegistrationNumber) && (
+              <>
+                <span className="mx-2 text-navy-500" aria-hidden="true">
+                  ·
+                </span>
+                <span className="whitespace-nowrap">ICAI FRN: {firmRegistrationNumber}</span>
+              </>
+            )}
           </p>
+          <Link
+            to="/login"
+            className={`inline-flex min-h-10 items-center self-start text-navy-400 transition-colors duration-200 hover:text-white sm:self-auto ${focusRing}`}
+          >
+            Admin login
+          </Link>
         </div>
-
-        <div>
-          <h4 className="text-white font-semibold mb-4">Quick Links</h4>
-          <ul className="flex flex-col gap-2 text-sm">
-            <li>
-              <a href="#home" className="hover:text-white transition">
-                Home
-              </a>
-            </li>
-            <li>
-              <a href="#about" className="hover:text-white transition">
-                About
-              </a>
-            </li>
-            <li>
-              <a href="#services" className="hover:text-white transition">
-                Services
-              </a>
-            </li>
-            <li>
-              <a href="#team" className="hover:text-white transition">
-                Team
-              </a>
-            </li>
-            <li>
-              <a href="#careers" className="hover:text-white transition">
-                Careers
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="text-white font-semibold mb-4">Contact</h4>
-          <ul className="flex flex-col gap-3 text-sm">
-            <li className="flex items-center gap-2">
-              <Mail size={16} />
-              <a
-                href={`mailto:${siteConfig.contact.primaryEmail}`}
-                className="hover:text-white transition"
-              >
-                {siteConfig.contact.primaryEmail}
-              </a>
-            </li>
-            <li className="flex items-center gap-2">
-              <MapPin size={16} />
-              <span>{siteConfig.location.addressLine2}</span>
-            </li>
-            <li className="text-xs text-slate-500 mt-1">
-              Hours: {siteConfig.businessHours.display}
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="text-white font-semibold mb-4">Follow Us</h4>
-          <div className="flex gap-4">
-            <a
-              href={siteConfig.socialLinks.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-              className="hover:text-white transition"
-            >
-              <InstagramIcon size={20} />
-            </a>
-            <a
-              href={siteConfig.socialLinks.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              className="hover:text-white transition"
-            >
-              <LinkedinIcon size={20} />
-            </a>
-            <a
-              href={siteConfig.socialLinks.facebook}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook"
-              className="hover:text-white transition"
-            >
-              <FacebookIcon size={20} />
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div className="border-t border-slate-800 pt-6 text-center text-sm">
-        <p>
-          &copy; {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
-        </p>
       </div>
     </footer>
   )

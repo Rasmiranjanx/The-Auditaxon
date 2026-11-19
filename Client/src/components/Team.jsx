@@ -2,6 +2,7 @@ import React from 'react'
 import { teamMembers } from '../assets/assets'
 import { Mail } from 'lucide-react'
 import siteConfig from '../config/site'
+import SectionHeader from './ui/SectionHeader'
 
 const Team = () => {
   const teamInfo = [
@@ -20,76 +21,55 @@ const Team = () => {
   ]
 
   return (
-    <div
-      id="team"
-      className="min-h-screen py-20 px-6 md:px-20 lg:px-32 bg-black flex flex-col justify-center relative overflow-hidden"
-    >
-      {/* Background Gradient */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            'linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.06) 50%, transparent 60%)',
-        }}
-      ></div>
-
-      {/* Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[36rem] h-[36rem] bg-white/10 rounded-full blur-3xl"></div>
-
-      <div className="relative z-10">
-        {/* Heading */}
-        <div className="text-center mb-14">
-          <h2
-            className="text-3xl md:text-4xl font-bold text-white"
-            style={{
-              fontFamily: "'Playfair Display', serif",
-            }}
-          >
-            Meet Our Team
-          </h2>
-
-          <p className="text-slate-400 mt-3 max-w-2xl mx-auto">
-            The people behind The Auditaxon — experienced, dedicated, and here to help.
-          </p>
-        </div>
+    <section id="team" className="section bg-white">
+      <div className="container-page">
+        <SectionHeader
+          eyebrow="Our people"
+          title="Meet Our Team"
+          lead="The people behind The Auditaxon — experienced, dedicated, and here to help."
+        />
 
         {/* Team Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="mx-auto mt-12 flex max-w-5xl flex-wrap justify-center gap-6 md:mt-16 lg:gap-8">
           {teamMembers.map((member, index) => {
             const person = teamInfo[index]
 
             return (
-              <div
+              <article
                 key={member.id}
-                className="flex flex-col items-center text-center p-8 rounded-lg border border-slate-800 bg-slate-900/50 hover:border-slate-700 transition"
+                className="card w-full max-w-sm overflow-hidden sm:w-[calc((100%_-_1.5rem)/2)] sm:max-w-none lg:w-[calc((100%_-_4rem)/3)]"
               >
-                {/* Photo */}
-                <img
-                  src={member.photo}
-                  alt={person.name}
-                  className="w-40 h-40 rounded-full object-cover mb-5 border border-white/20"
-                />
-
-                {/* Name */}
-                <h3 className="font-semibold text-xl text-white">{person.name}</h3>
-
-                {/* Role */}
-                <p className="text-slate-400 text-sm mb-4">{person.role}</p>
-
-                {/* Contact Details */}
-                <div className="flex flex-col gap-2 text-sm text-slate-400">
-                  {/* Same Email for Everyone */}
-                  <span className="flex items-center gap-2 justify-center">
-                    <Mail size={14} />
-                    {siteConfig.contact.primaryEmail}
-                  </span>
+                {/* Photo: the portraits are shot on white, so multiply them onto a warm backdrop */}
+                <div className="border-b border-paper-edge bg-paper">
+                  <img
+                    src={member.photo}
+                    alt={person.name}
+                    className="aspect-[4/5] w-full object-cover object-top mix-blend-multiply"
+                  />
                 </div>
-              </div>
+
+                <div className="p-6">
+                  {/* Name */}
+                  <h3 className="font-display text-xl font-semibold text-ink">{person.name}</h3>
+
+                  {/* Role */}
+                  <p className="mt-1 text-sm font-medium text-gold-700">{person.role}</p>
+
+                  {/* Contact Details: same email for everyone */}
+                  <a
+                    href={`mailto:${siteConfig.contact.primaryEmail}`}
+                    className="link mt-3 inline-flex min-h-10 items-center gap-2 text-sm"
+                  >
+                    <Mail size={16} strokeWidth={1.75} className="shrink-0 text-gold-600" />
+                    {siteConfig.contact.primaryEmail}
+                  </a>
+                </div>
+              </article>
             )
           })}
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 

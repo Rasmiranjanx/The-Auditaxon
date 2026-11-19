@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import api from '../lib/api'
 import { Star, Quote } from 'lucide-react'
+import SectionHeader from './ui/SectionHeader'
 
 const Testimonials = () => {
   const [reviews, setReviews] = useState([])
@@ -15,60 +16,53 @@ const Testimonials = () => {
   if (reviews.length === 0) return null // hide section entirely if no approved reviews yet
 
   return (
-    <div
-      id="testimonials"
-      className="min-h-screen py-20 px-6 md:px-20 lg:px-32 bg-black flex flex-col justify-center relative overflow-hidden"
-    >
+    <section id="testimonials" className="section relative overflow-hidden bg-navy-900">
+      {/* Faint hexagon grid echoing the logo */}
       <div
-        className="absolute inset-0"
-        style={{
-          background:
-            'linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.06) 50%, transparent 60%)',
-        }}
+        aria-hidden="true"
+        className="pattern-hex pattern-fade pointer-events-none absolute inset-0"
       ></div>
 
-      <div className="absolute top-20 right-20 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-20 left-20 w-64 h-64 bg-slate-400/10 rounded-full blur-3xl"></div>
+      <div className="container-page relative">
+        <SectionHeader
+          onDark
+          eyebrow="Client voices"
+          title="What Our Clients Say"
+          lead="Real feedback from businesses we've worked with."
+        />
 
-      <div className="relative z-10">
-        <div className="text-center mb-14">
-          <h2
-            className="text-3xl md:text-4xl font-bold text-white"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
-            What Our Clients Say
-          </h2>
-          <p className="text-slate-400 mt-3 max-w-2xl mx-auto">
-            Real feedback from businesses we've worked with.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="mt-12 flex flex-wrap justify-center gap-6 md:mt-16">
           {reviews.map((r) => (
-            <div
+            <figure
               key={r._id}
-              className="flex flex-col p-8 rounded-lg border border-slate-800 bg-slate-900/50 hover:border-slate-700 transition"
+              className="card-on-dark flex w-full flex-col p-7 md:w-[calc((100%_-_1.5rem)/2)] lg:w-[calc((100%_-_3rem)/3)]"
             >
-              <Quote className="text-white/20 mb-4" size={32} />
-              <p className="text-slate-300 text-sm mb-6 flex-1">{r.message}</p>
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    size={16}
-                    className={i < r.rating ? 'text-amber-400 fill-amber-400' : 'text-slate-700'}
-                  />
-                ))}
+              <div className="flex items-center justify-between gap-4">
+                <Quote size={28} strokeWidth={1.5} className="shrink-0 fill-gold-400/15 text-gold-400" />
+                <div className="flex gap-1" role="img" aria-label={`Rated ${r.rating} out of 5`}>
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      size={16}
+                      className={i < r.rating ? 'fill-gold-400 text-gold-400' : 'text-white/20'}
+                    />
+                  ))}
+                </div>
               </div>
-              <div>
-                <h4 className="font-semibold text-white">{r.name}</h4>
-                <p className="text-slate-500 text-xs">{r.role}</p>
-              </div>
-            </div>
+
+              <blockquote className="mt-5 flex-1 text-base leading-relaxed break-words text-navy-50">
+                <p>{r.message}</p>
+              </blockquote>
+
+              <figcaption className="mt-6 border-t border-white/10 pt-5">
+                <p className="font-semibold break-words text-white">{r.name}</p>
+                <p className="mt-0.5 text-sm break-words text-navy-200">{r.role}</p>
+              </figcaption>
+            </figure>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 

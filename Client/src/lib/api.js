@@ -6,11 +6,12 @@ import axios from 'axios'
  */
 const baseURL = import.meta.env.VITE_API_URL || '/api'
 
+// No default Content-Type: axios sends plain objects as application/json on its own,
+// and lets the browser set multipart/form-data (with its boundary) for FormData uploads
+// such as the careers resume. Forcing application/json here would make axios serialise
+// FormData to JSON and silently drop the uploaded file.
 const api = axios.create({
   baseURL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 })
 
 // Request Interceptor: Attach bearer token if stored

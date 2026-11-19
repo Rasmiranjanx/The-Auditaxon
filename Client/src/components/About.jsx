@@ -1,5 +1,7 @@
 import React from 'react'
-import { Target, ShieldCheck, Users, Zap } from 'lucide-react'
+import { ArrowRight, Handshake, MonitorCog, ShieldCheck, Target } from 'lucide-react'
+import SectionHeader from './ui/SectionHeader'
+import siteConfig, { hasValue } from '../config/site'
 
 const values = [
   {
@@ -13,12 +15,12 @@ const values = [
     description: 'Clear communication, no hidden surprises in your finances.',
   },
   {
-    icon: Users,
+    icon: Handshake,
     title: 'Client-First',
     description: 'Your goals shape how we approach every engagement.',
   },
   {
-    icon: Zap,
+    icon: MonitorCog,
     title: 'Modern Approach',
     description: "Efficient, tech-enabled processes built for today's businesses.",
   },
@@ -26,41 +28,51 @@ const values = [
 
 const About = () => {
   return (
-    <div
-      id="about"
-      className="min-h-screen py-20 px-6 md:px-20 lg:px-32 bg-white flex flex-col justify-center"
-    >
-      <div className="text-center mb-14">
-        <h2
-          className="text-3xl md:text-4xl font-bold text-slate-900"
-          style={{ fontFamily: "'Playfair Display', serif" }}
-        >
-          About The Auditaxon
-        </h2>
-        <p className="text-slate-500 mt-3 max-w-2xl mx-auto">
-          Founded to bring clarity and confidence to businesses navigating taxation, audit, and
-          compliance — with the precision your finances deserve.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {values.map((value, index) => {
-          const Icon = value.icon
-          return (
-            <div
-              key={index}
-              className="flex flex-col items-center text-center p-6 rounded-lg border border-slate-100 hover:shadow-lg transition"
+    <section id="about" className="section bg-white text-pretty">
+      <div className="container-page">
+        <div className="grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-16">
+          <div>
+            <SectionHeader
+              align="left"
+              eyebrow="About us"
+              title="About The Auditaxon"
+              lead="Founded to bring clarity and confidence to businesses navigating taxation, audit, and compliance — with the precision your finances deserve."
+            />
+            {hasValue(siteConfig.description) && (
+              <p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-600">
+                {siteConfig.description}
+              </p>
+            )}
+            <a
+              href="#services"
+              className="link mt-6 inline-flex min-h-10 items-center gap-2 focus-visible:ring-offset-2"
             >
-              <div className="bg-slate-900 text-white p-4 rounded-full mb-4">
-                <Icon size={28} />
-              </div>
-              <h3 className="font-semibold text-lg text-slate-900">{value.title}</h3>
-              <p className="text-slate-500 text-sm mt-2">{value.description}</p>
-            </div>
-          )
-        })}
+              Explore our services
+              <ArrowRight size={16} aria-hidden="true" />
+            </a>
+          </div>
+
+          <ul className="grid gap-5 sm:grid-cols-2 sm:gap-6">
+            {values.map((value, index) => {
+              const Icon = value.icon
+              return (
+                <li key={index} className="card flex gap-4 p-5 sm:flex-col sm:gap-5 sm:p-6">
+                  <span className="icon-tile">
+                    <Icon size={22} strokeWidth={1.75} aria-hidden="true" />
+                  </span>
+                  <div>
+                    <h3 className="text-lg font-semibold text-ink">{value.title}</h3>
+                    <p className="mt-1.5 text-sm leading-relaxed text-slate-600 sm:mt-2">
+                      {value.description}
+                    </p>
+                  </div>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
       </div>
-    </div>
+    </section>
   )
 }
 

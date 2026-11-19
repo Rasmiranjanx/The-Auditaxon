@@ -36,16 +36,19 @@ export const siteConfig = {
     city: 'Bhubaneswar',
     state: 'Odisha',
     country: 'India',
-    pinCode: 'TODO: Fill PIN Code (e.g. 751024)',
-    addressLine1: 'TODO: Fill office building / plot / street address',
-    addressLine2: 'Bhubaneswar, Odisha, India',
+    // Address formatted exactly as on the firm's Google Business Profile (keep these in sync for local SEO)
+    pinCode: '752101',
+    addressLine1: 'Lane no-31, Bharat Villa, Plot no- 464/10771, Puri Canal Rd, Hansapal',
+    addressLine2: 'Bhubaneswar, Rudrapur, Odisha 752101',
     fullAddress:
-      'TODO: Fill complete registered office address with landmark, Bhubaneswar, Odisha, India',
-    googleMapsEmbedUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d119743.53374945532!2d85.7504128522339!3d20.30086827018809!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a1909d2d5170aa5%3A0xfc580e2b68b33fa8!2sBhubaneswar%2C%20Odisha!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin', // TODO: Replace with exact office pin Google Maps embed link
+      'Lane no-31, Bharat Villa, Plot no- 464/10771, Puri Canal Rd, Hansapal, Bhubaneswar, Rudrapur, Odisha 752101',
+    // Google Maps listing for "The Auditaxon": share link (opens the live location / directions)
+    googleMapsUrl: 'https://maps.app.goo.gl/sPjv5GfvwAbkCC4y7',
+    // Keyless embed of the same listing (place ID / CID 0xac09386b1db5f195), pinned and labelled
+    googleMapsEmbedUrl: 'https://maps.google.com/maps?cid=12396501482025120149&z=17&output=embed',
     coordinates: {
-      latitude: 20.2961, // TODO: Replace with exact office latitude
-      longitude: 85.8245, // TODO: Replace with exact office longitude
+      latitude: 20.3200456,
+      longitude: 85.887973,
     },
   },
 
@@ -77,6 +80,16 @@ export const siteConfig = {
     itrsFiled: '1,200+', // TODO: Confirm total ITRs filed
     retentionRate: '98%', // TODO: Confirm client retention rate
   },
+}
+
+/**
+ * Returns true when a config value is filled in: not empty and not a "TODO" placeholder.
+ * Components use this to hide unconfirmed details instead of rendering placeholder text.
+ */
+export const hasValue = (value) => {
+  if (value === null || value === undefined) return false
+  if (typeof value === 'string') return value.trim() !== '' && !/\bTODO\b/i.test(value)
+  return true
 }
 
 /**

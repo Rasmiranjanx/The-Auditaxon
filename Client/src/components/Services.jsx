@@ -1,21 +1,22 @@
 import React from 'react'
 import {
-  Receipt,
-  FileStack,
+  Calculator,
+  ReceiptIndianRupee,
   ClipboardCheck,
   Building2,
   BookOpenText,
-  LineChart,
+  ChartLine,
 } from 'lucide-react'
+import SectionHeader from './ui/SectionHeader'
 
 const services = [
   {
-    icon: Receipt,
+    icon: Calculator,
     title: 'Direct Tax',
     description: 'Income tax planning, filing, and advisory for individuals and businesses.',
   },
   {
-    icon: FileStack,
+    icon: ReceiptIndianRupee,
     title: 'Indirect Tax / GST',
     description: 'GST registration, return filing, and compliance management.',
   },
@@ -35,7 +36,7 @@ const services = [
     description: 'Accurate, up-to-date books so you always know where you stand.',
   },
   {
-    icon: LineChart,
+    icon: ChartLine,
     title: 'Financial Advisory',
     description: 'Strategic guidance to help your business grow with confidence.',
   },
@@ -43,40 +44,38 @@ const services = [
 
 const Services = () => {
   return (
-    <div
-      id="services"
-      className="min-h-screen py-20 px-6 md:px-20 lg:px-32 bg-white flex flex-col justify-center"
-    >
-      <div className="text-center mb-14">
-        <h2
-          className="text-3xl md:text-4xl font-bold text-slate-900"
-          style={{ fontFamily: "'Playfair Display', serif" }}
-        >
-          Our Services
-        </h2>
-        <p className="text-slate-500 mt-3 max-w-2xl mx-auto">
-          Comprehensive financial and compliance solutions tailored to your business needs.
-        </p>
-      </div>
+    <section id="services" className="section bg-paper text-pretty">
+      <div className="container-page">
+        <SectionHeader
+          eyebrow="What we do"
+          title="Our Services"
+          lead="Comprehensive financial and compliance solutions tailored to your business needs."
+          className="text-balance"
+        />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {services.map((service, index) => {
-          const Icon = service.icon
-          return (
-            <div
-              key={index}
-              className="flex flex-col items-center text-center p-6 rounded-lg border border-slate-100 hover:shadow-lg transition"
-            >
-              <div className="bg-slate-900 text-white p-4 rounded-full mb-4">
-                <Icon size={28} />
-              </div>
-              <h3 className="font-semibold text-lg text-slate-900">{service.title}</h3>
-              <p className="text-slate-500 text-sm mt-2">{service.description}</p>
-            </div>
-          )
-        })}
+        <ul className="mt-12 grid gap-6 sm:grid-cols-2 md:mt-16 lg:grid-cols-3">
+          {services.map((service, index) => {
+            const Icon = service.icon
+            return (
+              <li
+                key={index}
+                className="group card card-interactive relative flex gap-4 overflow-hidden p-5 before:absolute before:inset-x-0 before:top-0 before:h-0.5 before:origin-left before:scale-x-0 before:bg-gold-500 before:transition-transform before:duration-200 hover:before:scale-x-100 sm:flex-col sm:gap-6 sm:p-7"
+              >
+                <span className="icon-tile transition-colors duration-200 group-hover:bg-navy-800 group-hover:text-gold-400 group-hover:ring-navy-800">
+                  <Icon size={22} strokeWidth={1.75} aria-hidden="true" />
+                </span>
+                <div>
+                  <h3 className="text-lg font-semibold text-ink">{service.title}</h3>
+                  <p className="mt-1.5 text-[15px] leading-relaxed text-slate-600 sm:mt-2">
+                    {service.description}
+                  </p>
+                </div>
+              </li>
+            )
+          })}
+        </ul>
       </div>
-    </div>
+    </section>
   )
 }
 
