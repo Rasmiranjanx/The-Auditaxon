@@ -1,6 +1,27 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import api from '../../lib/api'
 import { CircleAlert, Pencil, Trash2, UserPlus, Users } from 'lucide-react'
+
+// Keeps Tab focus inside the open dialog (keyboard accessibility only).
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+const keepFocusInDialog = (e, dialog) => {
+  if (e.key !== 'Tab' || !dialog) return
+  const nodes = dialog.querySelectorAll(FOCUSABLE)
+  if (nodes.length === 0) return
+  const first = nodes[0]
+  const last = nodes[nodes.length - 1]
+  if (!dialog.contains(document.activeElement)) {
+    e.preventDefault()
+    ;(e.shiftKey ? last : first).focus()
+  } else if (e.shiftKey && document.activeElement === first) {
+    e.preventDefault()
+    last.focus()
+  } else if (!e.shiftKey && document.activeElement === last) {
+    e.preventDefault()
+    first.focus()
+  }
+}
 
 // Monogram for the list avatar (display only): first and last initials of the name.
 const getInitials = (name) => {
@@ -35,6 +56,27 @@ const TeamPanel = () => {
   const [editingId, setEditingId] = useState(null)
   const [formData, setFormData] = useState(emptyForm)
   const [saving, setSaving] = useState(false)
+
+  // Dialog keyboard support only: while open, Escape does what Cancel does and Tab stays inside;
+  // once closed, focus returns to the control that opened it.
+  const lastFocusRef = useRef(null)
+  const dialogRef = useRef(null)
+  useEffect(() => {
+    if (!showForm) {
+      const el = lastFocusRef.current
+      if (el && el.isConnected) el.focus()
+      return
+    }
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setShowForm(false)
+        return
+      }
+      keepFocusInDialog(e, dialogRef.current)
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [showForm])
 
   const fetchMembers = async () => {
     setLoading(true)
@@ -119,16 +161,26 @@ const TeamPanel = () => {
     }
   }
 
+  // Display only: a failed load leaves the list empty, so show just the error, not "0" / "No team members yet."
+  const loadFailed = Boolean(error) && members.length === 0
+
   return (
     <div>
-      <section aria-labelledby="team-panel-title" className="card overflow-hidden">
+      <section
+        aria-labelledby="team-panel-title"
+        inert={showForm}
+        onFocus={(e) => {
+          lastFocusRef.current = e.target
+        }}
+        className="card overflow-hidden"
+      >
         <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-b border-slate-200 px-4 py-4 sm:px-6">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2.5">
               <h2 id="team-panel-title" className="text-lg font-semibold text-ink">
                 Team
               </h2>
-              {!loading && (
+              {!loading && !loadFailed && (
                 <span className="badge badge-slate">
                   {members.length}
                   <span className="sr-only"> members</span>
@@ -146,7 +198,7 @@ const TeamPanel = () => {
         </div>
 
         {error && (
-          <div className="px-4 pt-4 sm:px-6">
+          <div className="px-4 pt-4 last:pb-4 sm:px-6 sm:last:pb-6">
             <div role="alert" className="alert alert-error">
               <CircleAlert size={18} className="mt-px shrink-0" aria-hidden="true" />
               <p>{error}</p>
@@ -159,17 +211,19 @@ const TeamPanel = () => {
             Loading team members…
           </p>
         ) : members.length === 0 ? (
-          <div className="flex flex-col items-center px-6 py-16 text-center">
-            <Users size={40} strokeWidth={1.5} className="text-slate-300" aria-hidden="true" />
-            <p className="mt-4 font-medium text-ink">No team members yet.</p>
-            <p className="mt-1 text-sm text-balance text-slate-500">
-              Use “Add Team Member” to add the first person.
-            </p>
-          </div>
+          loadFailed ? null : (
+            <div className="flex flex-col items-center px-6 py-16 text-center">
+              <Users size={40} strokeWidth={1.5} className="text-slate-300" aria-hidden="true" />
+              <p className="mt-4 font-medium text-ink">No team members yet.</p>
+              <p className="mt-1 text-sm text-balance text-slate-500">
+                Use “Add Team Member” to add the first person.
+              </p>
+            </div>
+          )
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-slate-200 bg-slate-50 text-xs tracking-wide text-slate-500 uppercase">
+            <table className="block w-full text-left text-sm sm:table">
+              <thead className="hidden border-b border-slate-200 bg-slate-50 text-xs tracking-wide text-slate-500 uppercase sm:table-header-group">
                 <tr>
                   <th scope="col" className="px-4 py-3 font-semibold sm:px-6">
                     Name
@@ -185,10 +239,16 @@ const TeamPanel = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="block divide-y divide-slate-100 sm:table-row-group">
                 {members.map((member) => (
-                  <tr key={member._id} className="transition-colors hover:bg-slate-50/70">
-                    <td className="px-4 py-3 sm:px-6">
+                  <tr
+                    key={member._id}
+                    className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-3 px-4 py-4 transition-colors hover:bg-slate-50/70 sm:table-row"
+                  >
+                    <th
+                      scope="row"
+                      className="min-w-0 text-left align-middle font-normal sm:px-6 sm:py-3"
+                    >
                       <div className="flex items-center gap-3">
                         <span
                           aria-hidden="true"
@@ -197,26 +257,19 @@ const TeamPanel = () => {
                           {getInitials(member.name)}
                         </span>
                         <div className="min-w-0">
-                          <h3 className="font-medium text-ink">{member.name}</h3>
+                          <p className="font-medium text-ink">{member.name}</p>
                           <p className="mt-0.5 text-slate-500 lg:hidden">
                             {member.role}
                             {member.designation ? ` — ${member.designation}` : ''}
                           </p>
-                          <span
-                            className={`badge mt-1.5 capitalize sm:hidden ${
-                              member.category === 'partner' ? 'badge-navy' : 'badge-slate'
-                            }`}
-                          >
-                            {member.category}
-                          </span>
                         </div>
                       </div>
-                    </td>
-                    <td className="hidden px-4 py-3 text-slate-600 lg:table-cell">
+                    </th>
+                    <td className="hidden px-4 py-3 align-middle text-slate-600 lg:table-cell">
                       {member.role}
                       {member.designation ? ` — ${member.designation}` : ''}
                     </td>
-                    <td className="hidden px-4 py-3 sm:table-cell">
+                    <td className="col-start-2 row-start-1 justify-self-end align-middle sm:px-4 sm:py-3">
                       <span
                         className={`badge capitalize ${
                           member.category === 'partner' ? 'badge-navy' : 'badge-slate'
@@ -225,23 +278,23 @@ const TeamPanel = () => {
                         {member.category}
                       </span>
                     </td>
-                    <td className="py-3 pr-4 pl-0 sm:px-6">
-                      <div className="flex flex-col items-end gap-2 sm:flex-row sm:justify-end">
+                    <td className="col-span-2 justify-self-end align-middle sm:py-3 sm:pr-6 sm:pl-4">
+                      <div className="flex justify-end gap-2">
                         <button
                           onClick={() => openEditForm(member)}
                           aria-label={`Edit ${member.name}`}
-                          className="btn btn-outline btn-sm h-10 w-10 px-0 sm:h-8 sm:w-auto sm:px-3"
+                          className="btn btn-outline btn-sm h-10 sm:h-8"
                         >
                           <Pencil size={14} aria-hidden="true" />
-                          <span className="hidden sm:inline">Edit</span>
+                          Edit
                         </button>
                         <button
                           onClick={() => handleDelete(member._id)}
                           aria-label={`Delete ${member.name}`}
-                          className="btn btn-danger btn-sm h-10 w-10 px-0 sm:h-8 sm:w-auto sm:px-3"
+                          className="btn btn-danger btn-sm h-10 sm:h-8"
                         >
                           <Trash2 size={14} aria-hidden="true" />
-                          <span className="hidden sm:inline">Delete</span>
+                          Delete
                         </button>
                       </div>
                     </td>
@@ -256,6 +309,7 @@ const TeamPanel = () => {
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy-950/60 p-4 sm:p-6">
           <div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="team-form-title"
@@ -272,6 +326,12 @@ const TeamPanel = () => {
 
             <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
               <div className="flex-1 space-y-6 overflow-y-auto px-5 py-5 sm:px-6">
+                {error && (
+                  <div role="alert" className="alert alert-error">
+                    <CircleAlert size={18} aria-hidden="true" className="mt-px shrink-0" />
+                    <p>{error}</p>
+                  </div>
+                )}
                 <fieldset>
                   <legend className="text-xs font-semibold tracking-wider text-slate-500 uppercase">
                     Profile
@@ -287,6 +347,7 @@ const TeamPanel = () => {
                       <input
                         type="text"
                         id="team-name"
+                        autoFocus
                         name="name"
                         value={formData.name}
                         onChange={handleChange}

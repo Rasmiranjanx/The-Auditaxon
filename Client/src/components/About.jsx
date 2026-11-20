@@ -62,7 +62,7 @@ const About = () => {
                   </span>
                   <div>
                     <h3 className="text-lg font-semibold text-ink">{value.title}</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-slate-600 sm:mt-2">
+                    <p className="mt-1.5 text-[15px] leading-relaxed text-slate-600 sm:mt-2">
                       {value.description}
                     </p>
                   </div>

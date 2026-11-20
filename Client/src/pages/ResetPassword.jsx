@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import api from '../lib/api'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, CircleAlert, CircleCheck } from 'lucide-react'
@@ -11,6 +11,15 @@ const ResetPassword = () => {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [status, setStatus] = useState({ loading: false, success: false, error: '' })
+
+  // Presentational: give this route its own document title (WCAG 2.4.2).
+  useEffect(() => {
+    const previousTitle = document.title
+    document.title = `Reset password | ${siteConfig.name}`
+    return () => {
+      document.title = previousTitle
+    }
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()

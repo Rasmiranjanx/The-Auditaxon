@@ -1,6 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Clock, Mail, MapPin, Phone } from 'lucide-react'
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Clock,
+  LockKeyhole,
+  Mail,
+  MapPin,
+  Phone,
+} from 'lucide-react'
 import siteConfig, { hasValue } from '../config/site'
 import BrandMark from './ui/BrandMark'
 
@@ -89,6 +97,7 @@ const officeLines = [
     ? siteConfig.location.addressLine2
     : `${siteConfig.location.city}, ${siteConfig.location.state}`,
 ].filter(hasValue)
+const mapsUrl = siteConfig.location.googleMapsUrl
 const firmRegistrationNumber = siteConfig.icai.firmRegistrationNumber
 const toTelHref = (number) => `tel:${number.replace(/[^\d+]/g, '')}`
 
@@ -114,7 +123,8 @@ const shortDescription =
 const headingClass = 'text-sm font-semibold tracking-wide text-white'
 const focusRing =
   'focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:outline-none'
-const linkClass = `-mx-1.5 inline-flex min-h-10 min-w-10 items-center px-1.5 text-sm text-navy-200 transition-colors duration-200 hover:text-white ${focusRing}`
+const linkBaseClass = `-mx-1.5 inline-flex min-h-10 min-w-10 items-center px-1.5 text-sm transition-colors duration-200 ${focusRing}`
+const linkClass = `${linkBaseClass} text-navy-200 hover:text-white`
 const iconClass = 'shrink-0 text-gold-400'
 
 const Footer = () => {
@@ -212,11 +222,25 @@ const Footer = () => {
               ))}
               <li className="flex gap-3 py-2">
                 <MapPin size={16} className={`${iconClass} mt-0.5`} aria-hidden="true" />
-                <address className="leading-relaxed not-italic">
-                  {officeLines.map((line) => (
-                    <AddressLine key={line} text={line} />
-                  ))}
-                </address>
+                <div className="min-w-0">
+                  <address className="leading-relaxed not-italic">
+                    {officeLines.map((line) => (
+                      <AddressLine key={line} text={line} />
+                    ))}
+                  </address>
+                  {hasValue(mapsUrl) && (
+                    <a
+                      href={mapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${linkBaseClass} -mb-2 gap-1.5 font-medium text-gold-400 hover:text-gold-300`}
+                    >
+                      Get directions
+                      <ArrowUpRight size={14} aria-hidden="true" />
+                      <span className="sr-only">(opens in a new tab)</span>
+                    </a>
+                  )}
+                </div>
               </li>
               <li className="flex gap-3 py-2">
                 <Clock size={16} className={`${iconClass} mt-0.5`} aria-hidden="true" />
@@ -245,9 +269,15 @@ const Footer = () => {
           </p>
           <Link
             to="/login"
-            className={`-mx-1.5 inline-flex min-h-10 items-center self-start px-1.5 text-navy-400 transition-colors duration-200 hover:text-white sm:self-auto ${focusRing}`}
+            className="group inline-flex min-h-11 items-center gap-2.5 self-start rounded-md border border-gold-500/60 bg-gold-500/10 px-4 text-sm font-semibold text-gold-300 transition-colors duration-200 hover:border-gold-400 hover:bg-gold-500 hover:text-navy-950 focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 focus-visible:outline-none sm:self-auto"
           >
+            <LockKeyhole size={16} aria-hidden="true" />
             Admin login
+            <ArrowRight
+              size={15}
+              aria-hidden="true"
+              className="transition-transform duration-200 group-hover:translate-x-0.5"
+            />
           </Link>
         </div>
       </div>

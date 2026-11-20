@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowLeft, CircleAlert } from 'lucide-react'
 import api from '../lib/api'
@@ -8,6 +8,15 @@ import BrandMark from '../components/ui/BrandMark'
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' })
   const [status, setStatus] = useState({ loading: false, error: '' })
+
+  // Presentational: give this route its own document title (WCAG 2.4.2).
+  useEffect(() => {
+    const previousTitle = document.title
+    document.title = `Admin login | ${siteConfig.name}`
+    return () => {
+      document.title = previousTitle
+    }
+  }, [])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })

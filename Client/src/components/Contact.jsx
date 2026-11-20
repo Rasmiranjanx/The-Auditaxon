@@ -260,6 +260,7 @@ const Contact = () => {
                     id="contact-name"
                     type="text"
                     name="name"
+                    autoComplete="name"
                     placeholder="Your name"
                     value={formData.name}
                     onChange={handleChange}
@@ -276,6 +277,7 @@ const Contact = () => {
                     id="contact-email"
                     type="email"
                     name="email"
+                    autoComplete="email"
                     placeholder="you@example.com"
                     value={formData.email}
                     onChange={handleChange}
@@ -292,6 +294,7 @@ const Contact = () => {
                     id="contact-phone"
                     type="tel"
                     name="phone"
+                    autoComplete="tel"
                     placeholder="Best number to reach you"
                     value={formData.phone}
                     onChange={handleChange}
@@ -357,6 +360,20 @@ const Contact = () => {
             </div>
           </div>
         </div>
+
+        {/* Office location: embedded Google Maps listing for the firm */}
+        {hasValue(siteConfig.location.googleMapsEmbedUrl) && (
+          <div className="card mt-12 overflow-hidden lg:mt-16">
+            <iframe
+              src={siteConfig.location.googleMapsEmbedUrl}
+              title="Map showing The Auditaxon office in Hansapal, Bhubaneswar"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+              className="block h-72 w-full border-0 sm:h-96"
+            />
+          </div>
+        )}
       </div>
     </section>
   )

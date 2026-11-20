@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import api from '../lib/api'
 import { Link } from 'react-router-dom'
 import { ArrowLeft, CircleAlert, CircleCheck } from 'lucide-react'
@@ -8,6 +8,15 @@ import BrandMark from '../components/ui/BrandMark'
 const ForgotPassword = () => {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState({ loading: false, success: false, error: '' })
+
+  // Presentational: give this route its own document title (WCAG 2.4.2).
+  useEffect(() => {
+    const previousTitle = document.title
+    document.title = `Forgot password | ${siteConfig.name}`
+    return () => {
+      document.title = previousTitle
+    }
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()

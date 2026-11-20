@@ -69,7 +69,7 @@ const ReviewForm = () => {
                       className={
                         star <= (hoverRating || formData.rating)
                           ? 'fill-gold-500 text-gold-500 transition-colors duration-150'
-                          : 'text-slate-400 transition-colors duration-150'
+                          : 'text-slate-500 transition-colors duration-150'
                       }
                     />
                   </button>
@@ -86,6 +86,7 @@ const ReviewForm = () => {
                   id="review-name"
                   type="text"
                   name="name"
+                  autoComplete="name"
                   value={formData.name}
                   onChange={handleChange}
                   required
@@ -101,6 +102,7 @@ const ReviewForm = () => {
                   id="review-role"
                   type="text"
                   name="role"
+                  autoComplete="organization-title"
                   value={formData.role}
                   onChange={handleChange}
                   className="form-control"

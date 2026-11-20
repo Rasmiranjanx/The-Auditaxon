@@ -91,7 +91,7 @@ const Dashboard = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  aria-current={activeTab === tab.id ? 'page' : undefined}
+                  aria-pressed={activeTab === tab.id}
                   className={`inline-flex h-10 items-center gap-2 rounded-lg px-3.5 text-sm font-medium whitespace-nowrap transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-navy-600 focus-visible:ring-offset-2 focus-visible:outline-none sm:px-4 ${
                     activeTab === tab.id
                       ? 'bg-navy-800 text-white shadow-sm'

@@ -174,6 +174,7 @@ const ReviewsPanel = () => {
                       {!r.isApproved && (
                         <button
                           onClick={() => handleApprove(r._id)}
+                          aria-label={`Approve review by ${r.name}`}
                           className="btn btn-outline btn-sm h-10 lg:h-8"
                         >
                           <CheckCircle size={14} aria-hidden="true" /> Approve
@@ -181,6 +182,7 @@ const ReviewsPanel = () => {
                       )}
                       <button
                         onClick={() => handleDelete(r._id)}
+                        aria-label={`Delete review by ${r.name}`}
                         className="btn btn-danger btn-sm h-10 lg:h-8"
                       >
                         <Trash2 size={14} aria-hidden="true" /> Delete

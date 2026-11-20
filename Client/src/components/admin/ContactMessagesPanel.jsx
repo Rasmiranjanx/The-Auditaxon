@@ -3,17 +3,9 @@ import api from '../../lib/api'
 import { Mail, Phone, Trash2, CheckCircle, Inbox, CircleAlert } from 'lucide-react'
 
 // Card header used by the loading, error and loaded states (presentational only)
-const PanelHeader = ({ count }) => (
+const PanelHeader = () => (
   <div className="border-b border-slate-200 px-4 py-4 sm:px-6">
-    <div className="flex flex-wrap items-center gap-2.5">
-      <h2 className="text-lg font-semibold text-ink">Contact Messages</h2>
-      {count !== undefined && (
-        <span className="badge badge-slate">
-          {count}
-          <span className="sr-only"> messages</span>
-        </span>
-      )}
-    </div>
+    <h2 className="text-lg font-semibold text-ink">Contact Messages</h2>
     <p className="mt-1 text-sm text-slate-500">
       Enquiries sent through the contact form on the website.
     </p>
@@ -83,7 +75,7 @@ const ContactMessagesPanel = () => {
 
   return (
     <div className="card overflow-hidden">
-      <PanelHeader count={messages.length} />
+      <PanelHeader />
 
       {messages.length === 0 ? (
         <div className="flex flex-col items-center px-6 py-16 text-center">
@@ -125,7 +117,7 @@ const ContactMessagesPanel = () => {
                 >
                   <th
                     scope="row"
-                    className="row-span-2 min-w-0 text-left align-top font-normal lg:w-56 lg:py-4 lg:pr-4 lg:pl-6 xl:w-72"
+                    className="min-w-0 text-left align-top font-normal lg:w-56 lg:py-4 lg:pr-4 lg:pl-6 xl:w-72"
                   >
                     <p className={`text-ink ${msg.isRead ? 'font-medium' : 'font-semibold'}`}>
                       {msg.name}
@@ -149,13 +141,17 @@ const ContactMessagesPanel = () => {
                     </p>
                   </td>
 
-                  <td className="col-start-2 row-start-1 justify-self-end align-top lg:px-4 lg:py-4">
+                  <td className="col-start-2 row-start-1 flex flex-col items-end gap-1.5 justify-self-end align-top lg:table-cell lg:px-4 lg:py-4">
                     <span className={`badge ${msg.isRead ? 'badge-slate' : 'badge-navy'}`}>
                       {msg.isRead ? 'Read' : 'Unread'}
                     </span>
+                    {/* Mobile only: received date stacked under the badge */}
+                    <span className="text-xs whitespace-nowrap text-slate-500 lg:hidden">
+                      {new Date(msg.createdAt).toLocaleDateString()}
+                    </span>
                   </td>
 
-                  <td className="col-start-2 row-start-2 justify-self-end align-top text-xs whitespace-nowrap text-slate-500 lg:px-4 lg:py-4 lg:text-sm">
+                  <td className="hidden align-top text-sm whitespace-nowrap text-slate-500 lg:table-cell lg:px-4 lg:py-4">
                     {new Date(msg.createdAt).toLocaleDateString()}
                   </td>
 
@@ -164,6 +160,7 @@ const ContactMessagesPanel = () => {
                       {!msg.isRead && (
                         <button
                           onClick={() => handleMarkRead(msg._id)}
+                          aria-label={`Mark as read: message from ${msg.name}`}
                           className="btn btn-outline btn-sm h-10 lg:h-8"
                         >
                           <CheckCircle size={14} aria-hidden="true" /> Mark as read
@@ -171,6 +168,7 @@ const ContactMessagesPanel = () => {
                       )}
                       <button
                         onClick={() => handleDelete(msg._id)}
+                        aria-label={`Delete message from ${msg.name}`}
                         className="btn btn-danger btn-sm h-10 lg:h-8"
                       >
                         <Trash2 size={14} aria-hidden="true" /> Delete

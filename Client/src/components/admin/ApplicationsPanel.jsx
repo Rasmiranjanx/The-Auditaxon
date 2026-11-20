@@ -12,18 +12,10 @@ const statusColors = {
 }
 
 // Card header used by the loading, error and loaded states (presentational only)
-const PanelHeader = ({ count, children }) => (
+const PanelHeader = ({ children }) => (
   <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-3 border-b border-slate-200 px-4 py-4 sm:px-6">
     <div className="min-w-0">
-      <div className="flex flex-wrap items-center gap-2.5">
-        <h2 className="text-lg font-semibold text-ink">Job Applications</h2>
-        {count !== undefined && (
-          <span className="badge badge-slate">
-            {count}
-            <span className="sr-only"> applications</span>
-          </span>
-        )}
-      </div>
+      <h2 className="text-lg font-semibold text-ink">Job Applications</h2>
       <p className="mt-1 text-sm text-slate-500">
         Applications submitted through the careers form on the website.
       </p>
@@ -69,10 +61,37 @@ const ApplicationsPanel = () => {
     }
   }
 
+  // Same filter element in every state, so the <select> stays mounted (and keeps focus)
+  // while the list reloads (presentational only)
+  const filterControl = (
+    <div className="flex items-center gap-2">
+      <label
+        htmlFor="applications-status-filter"
+        className="text-sm font-medium whitespace-nowrap text-slate-600"
+      >
+        Status
+      </label>
+      <select
+        id="applications-status-filter"
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+        className="form-control h-10 w-auto py-1.5 pr-9 pl-3 text-sm lg:h-9"
+      >
+        <option value="">All statuses</option>
+
+        {statusOptions.map((s) => (
+          <option key={s} value={s}>
+            {s.charAt(0).toUpperCase() + s.slice(1)}
+          </option>
+        ))}
+      </select>
+    </div>
+  )
+
   if (loading) {
     return (
       <div className="card overflow-hidden">
-        <PanelHeader />
+        <PanelHeader>{filterControl}</PanelHeader>
         <p role="status" className="px-6 py-16 text-center text-sm text-slate-500">
           Loading applications…
         </p>
@@ -83,7 +102,7 @@ const ApplicationsPanel = () => {
   if (error) {
     return (
       <div className="card overflow-hidden">
-        <PanelHeader />
+        <PanelHeader>{filterControl}</PanelHeader>
         <div className="p-4 sm:p-6">
           <div role="alert" className="alert alert-error">
             <CircleAlert size={18} aria-hidden="true" className="mt-px shrink-0" />
@@ -96,30 +115,7 @@ const ApplicationsPanel = () => {
 
   return (
     <div className="card overflow-hidden">
-      <PanelHeader count={applications.length}>
-        <div className="flex items-center gap-2">
-          <label
-            htmlFor="applications-status-filter"
-            className="text-sm font-medium whitespace-nowrap text-slate-600"
-          >
-            Status
-          </label>
-          <select
-            id="applications-status-filter"
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="form-control h-10 w-auto py-1.5 pr-9 pl-3 text-sm lg:h-9"
-          >
-            <option value="">All statuses</option>
-
-            {statusOptions.map((s) => (
-              <option key={s} value={s}>
-                {s.charAt(0).toUpperCase() + s.slice(1)}
-              </option>
-            ))}
-          </select>
-        </div>
-      </PanelHeader>
+      <PanelHeader>{filterControl}</PanelHeader>
 
       {applications.length === 0 ? (
         <div className="flex flex-col items-center px-6 py-16 text-center">
@@ -200,7 +196,7 @@ const ApplicationsPanel = () => {
                       </p>
                     )}
 
-                    {(app.experienceYears || app.experienceMonths) && (
+                    {(Number(app.experienceYears) > 0 || Number(app.experienceMonths) > 0) && (
                       <p>
                         <span className="text-slate-500">Experience:</span>{' '}
                         {app.experienceYears || 0}y {app.experienceMonths || 0}m
@@ -236,6 +232,10 @@ const ApplicationsPanel = () => {
                           className="text-xs font-medium whitespace-nowrap text-slate-500"
                         >
                           Set status
+                          <span className="sr-only">
+                            {' '}
+                            for {app.firstName} {app.lastName}
+                          </span>
                         </label>
                         <select
                           id={`application-status-${app._id}`}

@@ -12,7 +12,8 @@ const applySteps = [
   },
   {
     title: 'Attach your resume',
-    text: 'Upload your resume as a PDF, DOC or DOCX file of up to 1 MB.',
+    // Non-breaking space keeps "1 MB" together when the line wraps.
+    text: 'Upload your resume as a PDF, DOC or DOCX file of up to 1 MB.',
   },
   {
     title: 'Submit your application',
@@ -131,11 +132,12 @@ const Careers = () => {
     <section id="careers" className="section bg-white">
       <div className="container-page">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-          {/* Intro, how to apply and the email alternative */}
-          <div className="lg:col-span-5">
+          {/* Intro, how to apply and the email alternative. On desktop screens tall
+              enough to show all of it, it stays in view beside the long form. */}
+          <div className="lg:col-span-5 lg:self-start lg:[@media(min-height:50rem)]:sticky lg:[@media(min-height:50rem)]:top-28">
             <SectionHeader
               align="left"
-              eyebrow="Work with us"
+              eyebrow="Careers"
               title="Careers"
               lead="Join our team. We're always looking for talented individuals to grow with us."
             />
@@ -154,7 +156,7 @@ const Careers = () => {
                     <StepNumber>{index + 1}</StepNumber>
                     <div className="pt-2">
                       <p className="font-semibold text-ink">{step.title}</p>
-                      <p className="mt-1 text-sm leading-relaxed text-slate-600">{step.text}</p>
+                      <p className="mt-1 text-[15px] leading-relaxed text-slate-600">{step.text}</p>
                     </div>
                   </li>
                 ))}
@@ -166,7 +168,7 @@ const Careers = () => {
                 <span className="icon-tile">
                   <Mail size={22} strokeWidth={1.75} aria-hidden="true" />
                 </span>
-                <p className="text-sm leading-relaxed text-slate-600">
+                <p className="text-[15px] leading-relaxed text-slate-600">
                   <span className="block font-semibold text-ink">Prefer email?</span>
                   Write to{' '}
                   <a href={`mailto:${siteConfig.contact.careersEmail}`} className="link">
@@ -206,6 +208,7 @@ const Careers = () => {
                         id="careers-firstName"
                         type="text"
                         name="firstName"
+                        autoComplete="given-name"
                         value={formData.firstName}
                         onChange={handleChange}
                         required
@@ -221,6 +224,7 @@ const Careers = () => {
                         id="careers-lastName"
                         type="text"
                         name="lastName"
+                        autoComplete="family-name"
                         value={formData.lastName}
                         onChange={handleChange}
                         required
@@ -236,6 +240,7 @@ const Careers = () => {
                         id="careers-email"
                         type="email"
                         name="email"
+                        autoComplete="email"
                         placeholder="you@example.com"
                         value={formData.email}
                         onChange={handleChange}
@@ -252,6 +257,7 @@ const Careers = () => {
                         id="careers-mobileNo"
                         type="tel"
                         name="mobileNo"
+                        autoComplete="tel"
                         value={formData.mobileNo}
                         onChange={handleChange}
                         required
@@ -267,6 +273,7 @@ const Careers = () => {
                         <select
                           id="careers-gender"
                           name="gender"
+                          autoComplete="sex"
                           value={formData.gender}
                           onChange={handleChange}
                           required
@@ -291,6 +298,7 @@ const Careers = () => {
                         id="careers-dateOfBirth"
                         type="date"
                         name="dateOfBirth"
+                        autoComplete="bday"
                         value={formData.dateOfBirth}
                         onChange={handleChange}
                         className={`form-control ${formData.dateOfBirth ? '' : 'text-slate-500'}`}
@@ -336,6 +344,7 @@ const Careers = () => {
                         id="careers-lastCompany"
                         type="text"
                         name="lastCompany"
+                        autoComplete="organization"
                         value={formData.lastCompany}
                         onChange={handleChange}
                         className="form-control"
@@ -349,6 +358,7 @@ const Careers = () => {
                         id="careers-portfolioWebsite"
                         type="url"
                         name="portfolioWebsite"
+                        autoComplete="url"
                         placeholder="https://"
                         value={formData.portfolioWebsite}
                         onChange={handleChange}
@@ -422,7 +432,7 @@ const Careers = () => {
                       className="form-file"
                     />
                     <p id="careers-resume-hint" className="form-hint">
-                      Accepted formats: PDF, DOC or DOCX, up to 1 MB.
+                      Accepted formats: PDF, DOC or DOCX, up to 1&nbsp;MB.
                     </p>
                   </div>
                 </fieldset>

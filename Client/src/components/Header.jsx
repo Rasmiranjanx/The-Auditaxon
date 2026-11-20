@@ -15,12 +15,14 @@ const serviceTitles = [
 // The three pillars from the logo: Expertise · Precision · Integrity
 const pillars = [
   { title: 'Expertise', text: 'Audit, tax and advisory under one roof.', icon: Award },
-  { title: 'Precision', text: 'Every number checked, every detail accounted for.', icon: Target },
-  { title: 'Integrity', text: 'Clear communication, no hidden surprises.', icon: ShieldCheck },
+  { title: 'Precision', text: 'Rigorous checks on every return and report.', icon: Target },
+  { title: 'Integrity', text: 'Independent, ethical advice you can rely on.', icon: ShieldCheck },
 ]
 
 const Header = () => {
-  const lead = [siteConfig.description, siteConfig.tagline].find(hasValue)
+  // The tagline leads the hero; the full description is left to the About section
+  // (shown there directly below) so the same paragraph is not read twice.
+  const lead = [siteConfig.tagline, siteConfig.description].find(hasValue)
   const hours = siteConfig.businessHours.display
   const openNow = isFirmOpenNow()
 
@@ -53,7 +55,8 @@ const Header = () => {
         <div className="grid flex-1 items-center gap-12 py-10 lg:grid-cols-12 lg:gap-10 lg:py-14">
           {/* Left column */}
           <div className="lg:col-span-7">
-            <p className="eyebrow eyebrow-on-dark">
+            {/* Below sm the eyebrow wraps to two lines: pin the gold rule to the first line */}
+            <p className="eyebrow eyebrow-on-dark max-sm:items-start max-sm:before:mt-2">
               <span>
                 Chartered Accountants<span className="hidden sm:inline"> · </span>
                 <br className="sm:hidden" />
@@ -67,7 +70,7 @@ const Header = () => {
             </h1>
 
             {lead && (
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-navy-100/85 sm:text-lg">
+              <p className="mt-6 max-w-xl text-lg leading-relaxed text-pretty text-navy-100/85 sm:text-xl">
                 {lead}
               </p>
             )}
@@ -142,7 +145,9 @@ const Header = () => {
               </span>
               <div>
                 <p className="font-semibold text-white">{title}</p>
-                <p className="mt-1 text-sm leading-relaxed text-pretty text-navy-200">{text}</p>
+                <p className="mt-1 text-[15px] leading-relaxed text-pretty text-navy-200 lg:text-sm">
+                  {text}
+                </p>
               </div>
             </li>
           ))}

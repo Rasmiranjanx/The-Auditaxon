@@ -55,13 +55,15 @@ const Team = () => {
                   {/* Role */}
                   <p className="mt-1 text-sm font-medium text-gold-700">{person.role}</p>
 
-                  {/* Contact Details: same email for everyone */}
+                  {/* Contact Details: same firm inbox for everyone, so label it as such */}
                   <a
                     href={`mailto:${siteConfig.contact.primaryEmail}`}
+                    aria-label={`Email the team at ${siteConfig.contact.primaryEmail}`}
+                    title={siteConfig.contact.primaryEmail}
                     className="link mt-3 inline-flex min-h-10 items-center gap-2 text-sm"
                   >
                     <Mail size={16} strokeWidth={1.75} className="shrink-0 text-gold-600" />
-                    {siteConfig.contact.primaryEmail}
+                    Email the team
                   </a>
                 </div>
               </article>
