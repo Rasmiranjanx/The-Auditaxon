@@ -9,7 +9,7 @@
 export const siteConfig = {
   name: 'The Auditaxon',
   shortName: 'Auditaxon',
-  legalName: 'The Auditaxon & Associates', // TODO: Confirm exact registered firm legal name with ICAI
+  legalName: 'The Auditaxon & Associates',
   tagline: 'Strategic Taxation, Audit & Financial Advisory',
   description:
     'A premier Chartered Accountancy and financial consultancy firm in Bhubaneswar, Odisha, India. Delivering uncompromising precision in statutory audits, GST & direct tax compliance, corporate restructuring, and financial advisory.',
@@ -25,10 +25,10 @@ export const siteConfig = {
     primaryEmail: 'contact@theauditaxon.com',
     supportEmail: 'theauditaxon@gmail.com', // TODO: Confirm if retaining gmail or transitioning fully to domain email
     careersEmail: 'careers@theauditaxon.com',
-    phone: 'TODO: Fill official telephone number (e.g. +91 674 XXXXXXX)',
-    mobile: 'TODO: Fill official mobile number (e.g. +91 9XXXXXXXXX)',
-    whatsappNumber: 'TODO: Fill WhatsApp number with country code without plus (e.g. 919XXXXXXXXX)',
-    displayPhone: '+91 (TODO: Fill phone)',
+    phone: '+91 94390 79089',
+    mobile: '', // Optional second number; leave empty to show only `phone`
+    whatsappNumber: '', // Country code, no plus (e.g. 919439079089); not shown on the site yet
+    displayPhone: '+91 94390 79089',
   },
 
   // Physical Location & Jurisdiction
@@ -66,11 +66,12 @@ export const siteConfig = {
   },
 
   // Social & Professional Profiles
+  // Empty = hidden on the site. Paste the full page URL to show its icon in the Contact section and footer.
   socialLinks: {
-    linkedin: 'https://linkedin.com/company/theauditaxon', // TODO: Confirm official LinkedIn page URL
-    facebook: 'https://facebook.com/theauditaxon', // TODO: Confirm official Facebook page URL
-    twitter: 'https://twitter.com/theauditaxon', // TODO: Confirm official Twitter/X URL
-    instagram: 'https://instagram.com/theauditaxon', // TODO: Confirm official Instagram profile
+    linkedin: '',
+    facebook: '',
+    twitter: '',
+    instagram: '',
   },
 
   // Key Firm Milestones / Trust Statistics (Placeholders until confirmed)
