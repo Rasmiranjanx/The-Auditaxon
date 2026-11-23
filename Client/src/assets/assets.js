@@ -7,27 +7,21 @@ import AuditLogo from './AuditLogo1.svg'
 export const teamMembers = [
   {
     id: 1,
-    name: 'Arjun Mehta',
-    role: 'Founder & CA',
+    name: 'Prabhu Kalyan Mohanty',
+    role: 'Founder & Managing Partner',
     photo: employee1,
-    email: 'arjun.mehta@theauditaxon.com',
-    phone: '+91 98765 43210',
   },
   {
     id: 2,
-    name: 'Priya Sharma',
-    role: 'Partner',
+    name: 'Rakesh Dash',
+    role: 'Partner, Operations & Strategy',
     photo: employee2,
-    email: 'priya.sharma@theauditaxon.com',
-    phone: '+91 98765 43211',
   },
   {
     id: 3,
-    name: 'Rohan Das',
-    role: 'Associate',
+    name: 'Jyoti Prakash Baral',
+    role: 'Partner, Business Development',
     photo: employee3,
-    email: 'rohan.das@theauditaxon.com',
-    phone: '+91 98765 43212',
   },
 ]
 

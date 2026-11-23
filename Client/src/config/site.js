@@ -22,9 +22,10 @@ export const siteConfig = {
 
   // Contact Information
   contact: {
-    primaryEmail: 'contact@theauditaxon.com',
-    supportEmail: 'theauditaxon@gmail.com', // TODO: Confirm if retaining gmail or transitioning fully to domain email
-    careersEmail: 'careers@theauditaxon.com',
+    // Mailboxes on the firm's domain (auditaxon.com); create them in Hostinger > Emails
+    primaryEmail: 'contact@auditaxon.com',
+    supportEmail: 'theauditaxon@gmail.com', // Not shown on the site
+    careersEmail: 'careers@auditaxon.com',
     phone: '+91 94390 79089',
     mobile: '', // Optional second number; leave empty to show only `phone`
     whatsappNumber: '', // Country code, no plus (e.g. 919439079089); not shown on the site yet

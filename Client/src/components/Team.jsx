@@ -5,21 +5,6 @@ import siteConfig from '../config/site'
 import SectionHeader from './ui/SectionHeader'
 
 const Team = () => {
-  const teamInfo = [
-    {
-      name: 'Prabhu Kalyan Mohanty',
-      role: 'Founder & Managing Partner',
-    },
-    {
-      name: 'Rakesh Dash',
-      role: 'Partner, Operations & Strategy',
-    },
-    {
-      name: 'Jyoti Prakash Baral',
-      role: 'Partner, Business Development',
-    },
-  ]
-
   return (
     <section id="team" className="section bg-white">
       <div className="container-page">
@@ -31,18 +16,16 @@ const Team = () => {
 
         {/* Team Cards */}
         <div className="mx-auto mt-12 flex max-w-5xl flex-wrap justify-center gap-6 md:mt-16 lg:gap-8">
-          {teamMembers.map((member, index) => {
-            const person = teamInfo[index]
-
+          {teamMembers.map((person) => {
             return (
               <article
-                key={member.id}
+                key={person.id}
                 className="card w-full max-w-sm overflow-hidden sm:w-[calc((100%_-_1.5rem)/2)] sm:max-w-none lg:w-[calc((100%_-_4rem)/3)]"
               >
                 {/* Photo: the portraits are shot on white, so multiply them onto a warm backdrop */}
                 <div className="border-b border-paper-edge bg-paper">
                   <img
-                    src={member.photo}
+                    src={person.photo}
                     alt={person.name}
                     className="aspect-[4/5] w-full object-cover object-top mix-blend-multiply"
                   />

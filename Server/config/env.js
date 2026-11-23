@@ -15,7 +15,7 @@ const requiredVars = [
   { key: 'CLOUDINARY_API_SECRET', desc: 'Cloudinary API secret' },
   { key: 'RESEND_API_KEY', desc: 'Resend API key for transactional emails' },
   { key: 'MAIL_FROM', desc: 'Sender email address (e.g. The Auditaxon <onboarding@resend.dev>)' },
-  { key: 'ADMIN_NOTIFY_EMAIL', desc: 'Firm notification inbox (e.g. contact@theauditaxon.com)' },
+  { key: 'ADMIN_NOTIFY_EMAIL', desc: 'Firm notification inbox (e.g. contact@auditaxon.com)' },
 ]
 
 const missing = requiredVars.filter((v) => !process.env[v.key] || process.env[v.key].trim() === '')
@@ -42,7 +42,7 @@ process.env.JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d'
 process.env.CLIENT_URL = process.env.CLIENT_URL.trim().replace(/\/+$/, '')
 
 if (!/^https?:\/\//.test(process.env.CLIENT_URL)) {
-  console.error(' [FATAL] CLIENT_URL must start with http:// or https:// (e.g. https://theauditaxon.com)')
+  console.error(' [FATAL] CLIENT_URL must start with http:// or https:// (e.g. https://auditaxon.com)')
   process.exit(1)
 }
 
@@ -60,7 +60,7 @@ if (process.env.NODE_ENV === 'production') {
   if (/onboarding@resend\.dev/i.test(process.env.MAIL_FROM)) {
     console.warn(
       ' [WARN] MAIL_FROM uses onboarding@resend.dev, which can only email your own Resend account. ' +
-        'Verify your domain in Resend and use e.g. "The Auditaxon <noreply@theauditaxon.com>".'
+        'Verify your domain in Resend and use e.g. "The Auditaxon <noreply@auditaxon.com>".'
     )
   }
 }
