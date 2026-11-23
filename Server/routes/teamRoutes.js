@@ -7,8 +7,10 @@ const {
   deleteTeamMember,
 } = require('../controllers/teamController')
 const { protect } = require('../middleware/authMiddleware')
+const validateObjectId = require('../middleware/validateObjectId')
 
 const router = express.Router()
+router.param('id', validateObjectId)
 
 // Public reads — powers the Partners page and Associates page
 router.get('/', getTeamMembers)

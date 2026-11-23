@@ -2,12 +2,16 @@ const crypto = require('crypto')
 const Admin = require('../models/Admin')
 const generateToken = require('../utils/generateToken')
 const sendPasswordResetEmail = require('../utils/sendEmail')
+const { serverError, asString } = require('../utils/http')
+
+const GENERIC_RESET_MESSAGE = 'If that email exists, a reset link has been sent'
 
 // @route  POST /api/auth/login
-// @access Public
+// @access Public (rate limited)
 const loginAdmin = async (req, res) => {
   try {
-    const { email, password } = req.body
+    const email = asString(req.body.email).toLowerCase()
+    const password = typeof req.body.password === 'string' ? req.body.password : ''
 
     if (!email || !password) {
       return res.status(400).json({ message: 'Email and password are required' })
@@ -31,7 +35,7 @@ const loginAdmin = async (req, res) => {
       token: generateToken(admin._id, admin.role),
     })
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message })
+    serverError(res, error)
   }
 }
 
@@ -42,15 +46,15 @@ const getMe = async (req, res) => {
 }
 
 // @route  POST /api/auth/forgot-password
-// @access Public
+// @access Public (rate limited)
 const forgotPassword = async (req, res) => {
   try {
-    const { email } = req.body
+    const email = asString(req.body.email).toLowerCase()
     if (!email) return res.status(400).json({ message: 'Email is required' })
 
     const admin = await Admin.findOne({ email })
-    if (!admin) {
-      return res.json({ message: 'If that email exists, a reset link has been sent' })
+    if (!admin || !admin.isActive) {
+      return res.json({ message: GENERIC_RESET_MESSAGE })
     }
 
     const resetToken = crypto.randomBytes(32).toString('hex')
@@ -59,24 +63,37 @@ const forgotPassword = async (req, res) => {
     await admin.save()
 
     const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`
-    await sendPasswordResetEmail(admin.email, resetUrl)
+    try {
+      await sendPasswordResetEmail(admin.email, resetUrl)
+    } catch (emailError) {
+      // Same response either way so the endpoint can't reveal which emails exist;
+      // the failure is in the server logs.
+      console.error('[EMAIL] Password reset email failed:', emailError.message)
+    }
 
-    res.json({ message: 'If that email exists, a reset link has been sent' })
+    res.json({ message: GENERIC_RESET_MESSAGE })
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message })
+    serverError(res, error)
   }
 }
 
 // @route  POST /api/auth/reset-password/:token
-// @access Public
+// @access Public (rate limited)
 const resetPassword = async (req, res) => {
   try {
-    const { password } = req.body
-    if (!password || password.length < 8) {
+    const password = typeof req.body.password === 'string' ? req.body.password : ''
+    if (password.length < 8) {
       return res.status(400).json({ message: 'Password must be at least 8 characters' })
     }
+    // bcrypt only uses the first 72 bytes of a password
+    if (Buffer.byteLength(password, 'utf8') > 72) {
+      return res.status(400).json({ message: 'Password must be at most 72 characters' })
+    }
 
-    const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex')
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(String(req.params.token))
+      .digest('hex')
 
     const admin = await Admin.findOne({
       resetPasswordToken: hashedToken,
@@ -94,7 +111,7 @@ const resetPassword = async (req, res) => {
 
     res.json({ message: 'Password reset successfully' })
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message })
+    serverError(res, error)
   }
 }
 

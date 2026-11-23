@@ -1,0 +1,23 @@
+# The Auditaxon: web server rules for Hostinger shared hosting (LiteSpeed/Apache).
+# Vite copies this file into dist/, so every build ships with it.
+
+Options -MultiViews
+RewriteEngine On
+
+# Always use HTTPS (activate the free SSL certificate in hPanel first)
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Serve real files and folders as-is; send every other path (/login, /admin/dashboard,
+# /reset-password/...) to index.html so React Router can render the page.
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+RewriteRule ^ index.html [L]
+
+# Make browsers re-check index.html so new deployments show up immediately
+<IfModule mod_headers.c>
+  <FilesMatch "^index\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

@@ -7,8 +7,10 @@ const {
   deleteContent,
 } = require('../controllers/contentController')
 const { protect, requireRole } = require('../middleware/authMiddleware')
+const validateObjectId = require('../middleware/validateObjectId')
 
 const router = express.Router()
+router.param('id', validateObjectId)
 
 // Public reads — this is what the React frontend calls for every page
 router.get('/', getContentList)

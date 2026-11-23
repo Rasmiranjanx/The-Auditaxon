@@ -29,17 +29,20 @@ const ApplicationsPanel = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [filter, setFilter] = useState('')
+  const [total, setTotal] = useState(0)
 
   const fetchApplications = async () => {
     setLoading(true)
     setError('')
 
     try {
+      // The API returns 20 per page by default; load up to its 100-item cap.
       const res = await api.get('/careers/applications', {
-        params: filter ? { status: filter } : {},
+        params: filter ? { status: filter, limit: 100 } : { limit: 100 },
       })
 
       setApplications(res.data.items)
+      setTotal(res.data.total ?? res.data.items.length)
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load applications')
     } finally {
@@ -116,6 +119,13 @@ const ApplicationsPanel = () => {
   return (
     <div className="card overflow-hidden">
       <PanelHeader>{filterControl}</PanelHeader>
+
+      {total > applications.length && (
+        <p className="border-b border-slate-200 bg-slate-50 px-4 py-2.5 text-xs text-slate-600 sm:px-6">
+          Showing the {applications.length} most recent of {total} applications. Use the status
+          filter to narrow the list.
+        </p>
+      )}
 
       {applications.length === 0 ? (
         <div className="flex flex-col items-center px-6 py-16 text-center">

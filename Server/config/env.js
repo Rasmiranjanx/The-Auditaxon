@@ -38,6 +38,33 @@ process.env.PORT = process.env.PORT || '5000'
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 process.env.JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d'
 
+// Password-reset links are built as `${CLIENT_URL}/reset-password/...`, so drop any trailing slash.
+process.env.CLIENT_URL = process.env.CLIENT_URL.trim().replace(/\/+$/, '')
+
+if (!/^https?:\/\//.test(process.env.CLIENT_URL)) {
+  console.error(' [FATAL] CLIENT_URL must start with http:// or https:// (e.g. https://theauditaxon.com)')
+  process.exit(1)
+}
+
+if (process.env.JWT_SECRET.length < 32) {
+  console.warn(
+    ' [WARN] JWT_SECRET is shorter than 32 characters. Generate a strong one with:\n' +
+      "   node -e \"console.log(require('crypto').randomBytes(48).toString('hex'))\""
+  )
+}
+
+if (process.env.NODE_ENV === 'production') {
+  if (!process.env.CLIENT_URL.startsWith('https://')) {
+    console.warn(' [WARN] CLIENT_URL should use https:// in production.')
+  }
+  if (/onboarding@resend\.dev/i.test(process.env.MAIL_FROM)) {
+    console.warn(
+      ' [WARN] MAIL_FROM uses onboarding@resend.dev, which can only email your own Resend account. ' +
+        'Verify your domain in Resend and use e.g. "The Auditaxon <noreply@theauditaxon.com>".'
+    )
+  }
+}
+
 module.exports = {
   PORT: process.env.PORT,
   NODE_ENV: process.env.NODE_ENV,

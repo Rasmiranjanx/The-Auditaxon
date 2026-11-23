@@ -22,4 +22,7 @@ const teamMemberSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
+// Public team list: active members in display order
+teamMemberSchema.index({ isActive: 1, order: 1, name: 1 })
+
 module.exports = mongoose.model('TeamMember', teamMemberSchema)
