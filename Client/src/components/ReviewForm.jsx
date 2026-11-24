@@ -3,6 +3,12 @@ import api from '../lib/api'
 import { Star, CircleCheck, CircleAlert } from 'lucide-react'
 import SectionHeader from './ui/SectionHeader'
 
+// Keep in sync with Server/controllers/reviewController.js
+const MAX_NAME = 120
+const MAX_ROLE = 120
+const MIN_MESSAGE = 10
+const MAX_MESSAGE = 1000
+
 const ReviewForm = () => {
   const [formData, setFormData] = useState({ name: '', role: '', message: '', rating: 0 })
   const [hoverRating, setHoverRating] = useState(0)
@@ -10,6 +16,7 @@ const ReviewForm = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
+    if (status.success || status.error) setStatus({ loading: false, success: false, error: '' })
   }
 
   const handleSubmit = async (e) => {
@@ -58,7 +65,10 @@ const ReviewForm = () => {
                     type="button"
                     aria-label={`Rate ${star} out of 5`}
                     aria-pressed={formData.rating === star}
-                    onClick={() => setFormData({ ...formData, rating: star })}
+                    onClick={() => {
+                      setFormData({ ...formData, rating: star })
+                      if (status.error) setStatus({ loading: false, success: false, error: '' })
+                    }}
                     onMouseEnter={() => setHoverRating(star)}
                     onMouseLeave={() => setHoverRating(0)}
                     className="inline-flex h-11 w-11 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:ring-navy-600 focus-visible:outline-none"
@@ -90,6 +100,7 @@ const ReviewForm = () => {
                   value={formData.name}
                   onChange={handleChange}
                   required
+                  maxLength={MAX_NAME}
                   className="form-control"
                 />
               </div>
@@ -105,6 +116,7 @@ const ReviewForm = () => {
                   autoComplete="organization-title"
                   value={formData.role}
                   onChange={handleChange}
+                  maxLength={MAX_ROLE}
                   className="form-control"
                 />
               </div>
@@ -121,9 +133,18 @@ const ReviewForm = () => {
                 value={formData.message}
                 onChange={handleChange}
                 required
+                minLength={MIN_MESSAGE}
+                maxLength={MAX_MESSAGE}
                 rows={4}
+                aria-describedby="review-message-hint"
                 className="form-control resize-none"
               ></textarea>
+              <p id="review-message-hint" className="form-hint flex justify-between gap-4">
+                <span>At least {MIN_MESSAGE} characters.</span>
+                <span>
+                  {formData.message.length} / {MAX_MESSAGE}
+                </span>
+              </p>
             </div>
 
             <button type="submit" disabled={status.loading} className="btn btn-primary mt-1 w-full">

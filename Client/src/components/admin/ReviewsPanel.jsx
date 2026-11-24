@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import api from '../../lib/api'
-import { Star, CheckCircle, Trash2, MessageSquareQuote, CircleAlert } from 'lucide-react'
+import { Star, CheckCircle, EyeOff, Trash2, MessageSquareQuote, CircleAlert } from 'lucide-react'
 
 // Card header used by the loading, error and loaded states (presentational only)
-const PanelHeader = ({ count }) => (
+const PanelHeader = ({ count, pending }) => (
   <div className="border-b border-slate-200 px-4 py-4 sm:px-6">
     <div className="flex flex-wrap items-center gap-2.5">
       <h2 className="text-lg font-semibold text-ink">Reviews</h2>
@@ -13,6 +13,7 @@ const PanelHeader = ({ count }) => (
           <span className="sr-only"> reviews</span>
         </span>
       )}
+      {pending > 0 && <span className="badge badge-gold">{pending} pending</span>}
     </div>
     <p className="mt-1 text-sm text-slate-500">
       Client feedback from the website. Approved reviews appear in the testimonials section.
@@ -24,6 +25,8 @@ const ReviewsPanel = () => {
   const [reviews, setReviews] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [actionError, setActionError] = useState('')
+  const [busyId, setBusyId] = useState(null)
 
   const fetchReviews = async () => {
     try {
@@ -40,24 +43,32 @@ const ReviewsPanel = () => {
     fetchReviews()
   }, [])
 
-  const handleApprove = async (id) => {
+  // Runs one admin action on a review, then refreshes the list; failures are shown above the table.
+  const runAction = async (id, request, failureText) => {
+    setBusyId(id)
+    setActionError('')
     try {
-      await api.put(`/reviews/${id}/approve`)
-      fetchReviews()
+      await request()
+      await fetchReviews()
     } catch (err) {
-      console.error('Failed to approve:', err)
+      setActionError(err.response?.data?.message || failureText)
+    } finally {
+      setBusyId(null)
     }
   }
 
-  const handleDelete = async (id) => {
+  const handleApprove = (id) =>
+    runAction(id, () => api.put(`/reviews/${id}/approve`), 'Failed to approve the review')
+
+  const handleUnapprove = (id) =>
+    runAction(id, () => api.put(`/reviews/${id}/unapprove`), 'Failed to unpublish the review')
+
+  const handleDelete = (id) => {
     if (!window.confirm('Delete this review?')) return
-    try {
-      await api.delete(`/reviews/${id}`)
-      fetchReviews()
-    } catch (err) {
-      console.error('Failed to delete:', err)
-    }
+    runAction(id, () => api.delete(`/reviews/${id}`), 'Failed to delete the review')
   }
+
+  const pendingCount = reviews.filter((r) => !r.isApproved).length
 
   if (loading)
     return (
@@ -83,7 +94,16 @@ const ReviewsPanel = () => {
 
   return (
     <div className="card overflow-hidden">
-      <PanelHeader count={reviews.length} />
+      <PanelHeader count={reviews.length} pending={pendingCount} />
+
+      {actionError && (
+        <div className="border-b border-slate-200 p-4 sm:px-6">
+          <div role="alert" className="alert alert-error">
+            <CircleAlert size={18} aria-hidden="true" className="mt-px shrink-0" />
+            <p>{actionError}</p>
+          </div>
+        </div>
+      )}
 
       {reviews.length === 0 ? (
         <div className="flex flex-col items-center px-6 py-16 text-center">
@@ -134,6 +154,10 @@ const ReviewsPanel = () => {
                   >
                     <p className="font-semibold text-ink">{r.name}</p>
                     {r.role && <p className="mt-0.5 text-slate-500">{r.role}</p>}
+                    <p className="mt-1 text-xs text-slate-500">
+                      <span className="sr-only">Submitted </span>
+                      {new Date(r.createdAt).toLocaleDateString()}
+                    </p>
                   </th>
 
                   <td className="col-span-2 align-top lg:px-4 lg:py-4">
@@ -171,9 +195,19 @@ const ReviewsPanel = () => {
 
                   <td className="col-span-2 justify-self-end align-top lg:py-4 lg:pr-6 lg:pl-4">
                     <div className="flex flex-wrap justify-end gap-2 lg:flex-col lg:flex-nowrap lg:items-end xl:flex-row xl:items-center">
-                      {!r.isApproved && (
+                      {r.isApproved ? (
+                        <button
+                          onClick={() => handleUnapprove(r._id)}
+                          disabled={busyId === r._id}
+                          aria-label={`Unpublish review by ${r.name}`}
+                          className="btn btn-outline btn-sm h-10 lg:h-8"
+                        >
+                          <EyeOff size={14} aria-hidden="true" /> Unpublish
+                        </button>
+                      ) : (
                         <button
                           onClick={() => handleApprove(r._id)}
+                          disabled={busyId === r._id}
                           aria-label={`Approve review by ${r.name}`}
                           className="btn btn-outline btn-sm h-10 lg:h-8"
                         >
@@ -182,6 +216,7 @@ const ReviewsPanel = () => {
                       )}
                       <button
                         onClick={() => handleDelete(r._id)}
+                        disabled={busyId === r._id}
                         aria-label={`Delete review by ${r.name}`}
                         className="btn btn-danger btn-sm h-10 lg:h-8"
                       >

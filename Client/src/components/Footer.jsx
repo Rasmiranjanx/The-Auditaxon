@@ -69,6 +69,7 @@ const quickLinks = [
   { label: 'Services', href: '#services' },
   { label: 'Team', href: '#team' },
   { label: 'Careers', href: '#careers' },
+  { label: 'Leave a review', href: '#feedback' },
   { label: 'Contact', href: '#contact' },
 ]
 

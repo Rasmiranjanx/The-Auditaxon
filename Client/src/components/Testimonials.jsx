@@ -15,6 +15,9 @@ const Testimonials = () => {
 
   if (reviews.length === 0) return null // hide section entirely if no approved reviews yet
 
+  const average = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+  const averageLabel = average.toFixed(1)
+
   return (
     <section id="testimonials" className="section relative overflow-hidden bg-navy-900">
       {/* Faint hexagon grid echoing the logo */}
@@ -30,6 +33,19 @@ const Testimonials = () => {
           title="What Our Clients Say"
           lead="Real feedback from businesses we've worked with."
         />
+
+        <p className="mt-6 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm text-navy-100">
+          <Star size={18} aria-hidden="true" className="fill-gold-400 text-gold-400" />
+          <span>
+            <span className="text-base font-semibold text-white">{averageLabel}</span> out of 5
+          </span>
+          <span aria-hidden="true" className="text-navy-400">
+            ·
+          </span>
+          <span>
+            {reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}
+          </span>
+        </p>
 
         <div className="mt-12 flex flex-wrap justify-center gap-6 md:mt-16">
           {reviews.map((r) => (
@@ -60,10 +76,16 @@ const Testimonials = () => {
 
               <figcaption className="mt-6 border-t border-white/10 pt-5">
                 <p className="font-semibold break-words text-white">{r.name}</p>
-                <p className="mt-0.5 text-sm break-words text-navy-200">{r.role}</p>
+                {r.role && <p className="mt-0.5 text-sm break-words text-navy-200">{r.role}</p>}
               </figcaption>
             </figure>
           ))}
+        </div>
+
+        <div className="mt-12 flex justify-center">
+          <a href="#feedback" className="btn btn-outline-light">
+            Share your experience
+          </a>
         </div>
       </div>
     </section>

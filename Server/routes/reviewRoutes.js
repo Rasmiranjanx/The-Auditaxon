@@ -4,6 +4,7 @@ const {
   getApprovedReviews,
   getAllReviews,
   approveReview,
+  unapproveReview,
   deleteReview,
 } = require('../controllers/reviewController')
 const { protect } = require('../middleware/authMiddleware')
@@ -17,6 +18,7 @@ router.post('/', formLimiter, submitReview)
 router.get('/', getApprovedReviews)
 router.get('/all', protect, getAllReviews)
 router.put('/:id/approve', protect, approveReview)
+router.put('/:id/unapprove', protect, unapproveReview)
 router.delete('/:id', protect, deleteReview)
 
 module.exports = router
