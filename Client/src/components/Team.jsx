@@ -54,7 +54,7 @@ const Team = () => {
                   <p className="mt-1 text-sm font-medium text-gold-700">{person.role}</p>
 
                   {roleFocus[person.id] && (
-                    <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-600">
+                    <p className="mt-3 flex-1 text-[15px] leading-relaxed text-slate-600">
                       {roleFocus[person.id]}
                     </p>
                   )}

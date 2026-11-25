@@ -90,10 +90,10 @@ const ApproachFAQ = () => {
                     <span className="font-display text-2xl font-semibold text-gold-300">
                       {item.step}
                     </span>
-                    <h3 className="mt-3 font-display text-lg font-semibold text-ivory">
+                    <h3 className="mt-3 font-display text-xl font-semibold text-ivory">
                       {item.title}
                     </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-navy-200/90">{item.text}</p>
+                    <p className="mt-2 text-[15px] leading-relaxed text-navy-200/90">{item.text}</p>
                   </li>
                 ))}
               </ol>

@@ -70,7 +70,7 @@ const Header = () => {
             </p>
 
             <h1
-              className="hero-enter mt-6 font-display text-4xl leading-[1.04] font-semibold tracking-tight text-balance text-ivory sm:text-5xl lg:text-[4rem]"
+              className="hero-enter mt-6 font-display text-4xl leading-[1.08] font-semibold tracking-tight text-balance text-ivory sm:text-5xl lg:text-6xl"
               style={{ animationDelay: '120ms' }}
             >
               <span className="block text-pretty">Numbers you can trust,</span>{' '}
@@ -81,7 +81,7 @@ const Header = () => {
 
             {lead && (
               <p
-                className="hero-enter mt-6 max-w-xl text-base leading-relaxed text-pretty text-navy-200 sm:text-lg"
+                className="hero-enter mt-6 max-w-xl text-lg leading-relaxed text-pretty text-navy-100/90 sm:text-xl"
                 style={{ animationDelay: '200ms' }}
               >
                 {lead}
