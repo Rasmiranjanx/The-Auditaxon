@@ -1,10 +1,10 @@
 @import 'tailwindcss';
 
 /* ------------------------------------------------------------------------
- * Design tokens: The Auditaxon brand
- * Anchored on the logo: navy #032967 (navy-800) and gold #C7922C (gold-500).
- * Use gold-700 (or darker) for small text on light backgrounds; gold-400/500
- * is reserved for accents and for text on navy.
+ * Design tokens: The Auditaxon — Bespoke Private Advisory Theme
+ * Obsidian Midnight navy, Brushed Champagne gold, and Warm Alabaster/Linen.
+ * Use gold-700 (or darker) for small text on light backgrounds; gold-300/400
+ * is reserved for accents and dark-surface highlights.
  * --------------------------------------------------------------------- */
 @theme {
   --font-sans:
@@ -12,33 +12,36 @@
     sans-serif;
   --font-display: 'Playfair Display', ui-serif, Georgia, Cambria, 'Times New Roman', serif;
 
-  --color-navy-50: #f2f6fb;
-  --color-navy-100: #e3ebf6;
-  --color-navy-200: #c3d3eb;
-  --color-navy-300: #93aed8;
-  --color-navy-400: #5f84c2;
-  --color-navy-500: #3563ae;
-  --color-navy-600: #1a4c99;
-  --color-navy-700: #0a3a82;
-  --color-navy-800: #032967;
-  --color-navy-900: #021c45;
-  --color-navy-950: #010f26;
+  /* Deep Obsidian Midnight Palette */
+  --color-navy-50: #f3f5fa;
+  --color-navy-100: #e4e8f2;
+  --color-navy-200: #c5cee0;
+  --color-navy-300: #95a5c4;
+  --color-navy-400: #657aa3;
+  --color-navy-500: #415680;
+  --color-navy-600: #2c3d61;
+  --color-navy-700: #1e2a45;
+  --color-navy-800: #131c31;
+  --color-navy-900: #0b1120;
+  --color-navy-950: #060913;
 
-  --color-gold-50: #fbf6ec;
-  --color-gold-100: #f5e8cc;
-  --color-gold-200: #ebd199;
-  --color-gold-300: #dfb665;
-  --color-gold-400: #d4a244;
-  --color-gold-500: #c7922c;
-  --color-gold-600: #a87a22;
-  --color-gold-700: #86601b;
-  --color-gold-800: #6a4c16;
-  --color-gold-900: #4f3911;
+  /* Brushed Champagne & Antique Bullion Gold */
+  --color-gold-50: #fbf8f1;
+  --color-gold-100: #f4ecda;
+  --color-gold-200: #e8d7b2;
+  --color-gold-300: #dac086;
+  --color-gold-400: #cba65a;
+  --color-gold-500: #b89146;
+  --color-gold-600: #997431;
+  --color-gold-700: #7a5b25;
+  --color-gold-800: #5f461d;
+  --color-gold-900: #463315;
 
-  /* Warm surfaces taken from the logo's paper background */
-  --color-paper: #f7f5f0;
-  --color-paper-edge: #e9e4da;
-  --color-ink: #0b1a33;
+  /* Warm Alabaster, Linen Parchment & Charcoal Ink */
+  --color-ivory: #fcfbf8;
+  --color-paper: #f4f0e8;
+  --color-paper-edge: #e4ddd0;
+  --color-ink: #121722;
 }
 
 @layer base {
@@ -48,7 +51,7 @@
   }
 
   body {
-    @apply bg-white font-sans text-slate-700 antialiased;
+    @apply bg-ivory font-sans text-slate-700 antialiased;
     text-rendering: optimizeLegibility;
   }
 
@@ -87,27 +90,31 @@
     @apply py-20 md:py-28;
   }
 
+  .font-display {
+    font-variant-numeric: lining-nums;
+  }
+
   /* Section headings ----------------------------------------------------- */
   .eyebrow {
-    @apply inline-flex items-center gap-3 text-xs font-semibold tracking-[0.2em] text-gold-700 uppercase;
+    @apply inline-flex items-center gap-3.5 text-xs font-semibold tracking-[0.22em] text-gold-700 uppercase;
   }
 
   .eyebrow::before {
     content: '';
-    @apply h-px w-8 bg-gold-500;
+    @apply h-px w-9 bg-gold-500/80;
   }
 
   .eyebrow-centered::after {
     content: '';
-    @apply h-px w-8 bg-gold-500;
+    @apply h-px w-9 bg-gold-500/80;
   }
 
   .eyebrow-on-dark {
-    @apply text-gold-400;
+    @apply text-gold-300;
   }
 
   .section-title {
-    @apply font-display text-3xl leading-tight font-semibold tracking-tight text-balance text-ink sm:text-4xl;
+    @apply font-display text-3xl leading-[1.14] font-semibold tracking-tight text-balance text-ink sm:text-4xl lg:text-[2.65rem];
   }
 
   .section-lead {
@@ -116,7 +123,7 @@
 
   /* Buttons ---------------------------------------------------------------- */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-semibold whitespace-nowrap transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex items-center justify-center gap-2 rounded px-5 py-3 text-sm font-semibold tracking-[0.02em] whitespace-nowrap transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .btn-sm {
@@ -124,19 +131,19 @@
   }
 
   .btn-primary {
-    @apply bg-navy-800 text-white shadow-sm hover:bg-navy-700 focus-visible:ring-navy-600;
+    @apply bg-navy-900 text-ivory shadow-sm hover:bg-navy-800 focus-visible:ring-navy-700;
   }
 
   .btn-accent {
-    @apply bg-gold-500 text-navy-950 shadow-sm hover:bg-gold-400 focus-visible:ring-gold-500;
+    @apply bg-gold-400 text-navy-950 shadow-sm hover:bg-gold-300 focus-visible:ring-gold-400;
   }
 
   .btn-outline {
-    @apply border border-slate-300 bg-white text-navy-800 hover:border-navy-300 hover:bg-navy-50 focus-visible:ring-navy-600;
+    @apply border border-paper-edge bg-white text-navy-900 hover:border-navy-300 hover:bg-paper focus-visible:ring-navy-600;
   }
 
   .btn-outline-light {
-    @apply border border-white/30 text-white hover:border-white/60 hover:bg-white/10 focus-visible:ring-white/70 focus-visible:ring-offset-navy-900;
+    @apply border border-gold-300/35 bg-white/[0.03] text-ivory hover:border-gold-300/70 hover:bg-white/[0.08] focus-visible:ring-gold-300/70 focus-visible:ring-offset-navy-950;
   }
 
   .btn-danger {
@@ -145,36 +152,36 @@
 
   /* Surfaces ---------------------------------------------------------------- */
   .card {
-    @apply rounded-xl border border-slate-200/80 bg-white shadow-[0_1px_2px_rgba(2,28,69,0.04),0_10px_30px_-15px_rgba(2,28,69,0.12)];
+    @apply rounded-lg border border-paper-edge bg-white shadow-[0_1px_2px_rgba(11,17,32,0.03),0_14px_32px_-18px_rgba(11,17,32,0.1)];
   }
 
   .card-interactive {
-    @apply transition duration-200 hover:-translate-y-0.5 hover:border-navy-200 hover:shadow-[0_2px_4px_rgba(2,28,69,0.05),0_22px_45px_-20px_rgba(2,28,69,0.28)];
+    @apply transition duration-200 hover:-translate-y-0.5 hover:border-gold-300 hover:shadow-[0_4px_10px_rgba(11,17,32,0.04),0_22px_44px_-20px_rgba(11,17,32,0.18)];
   }
 
   .card-on-dark {
-    @apply rounded-xl border border-white/10 bg-white/[0.04] backdrop-blur-sm;
+    @apply rounded-lg border border-gold-300/15 bg-white/[0.03] backdrop-blur-md;
   }
 
   .icon-tile {
-    @apply inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-navy-50 text-navy-800 ring-1 ring-navy-100 ring-inset;
+    @apply inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-paper text-navy-800 ring-1 ring-paper-edge ring-inset;
   }
 
   .icon-tile-on-dark {
-    @apply inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white/5 text-gold-400 ring-1 ring-white/10 ring-inset;
+    @apply inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-white/[0.04] text-gold-300 ring-1 ring-gold-300/20 ring-inset;
   }
 
   /* Forms ------------------------------------------------------------------- */
   .form-label {
-    @apply mb-1.5 block text-sm font-medium text-slate-700;
+    @apply mb-1.5 block text-sm font-medium text-ink/85;
   }
 
   .form-control {
-    @apply block w-full rounded-md border border-slate-300 bg-white px-3.5 py-2.5 text-[15px] text-ink shadow-sm transition placeholder:text-slate-500 focus:border-navy-500 focus:ring-4 focus:ring-navy-500/10 focus:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500;
+    @apply block w-full rounded border border-paper-edge bg-white px-3.5 py-2.5 text-[15px] text-ink shadow-2xs transition placeholder:text-slate-400 focus:border-navy-700 focus:ring-4 focus:ring-navy-700/10 focus:outline-none disabled:cursor-not-allowed disabled:bg-paper disabled:text-slate-500;
   }
 
   .form-file {
-    @apply block w-full cursor-pointer rounded-md border border-dashed border-slate-300 bg-white p-2 text-sm text-slate-600 transition file:mr-4 file:cursor-pointer file:rounded file:border-0 file:bg-navy-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-navy-800 hover:border-navy-300 hover:file:bg-navy-100 focus:border-navy-500 focus:ring-4 focus:ring-navy-500/10 focus:outline-none;
+    @apply block w-full cursor-pointer rounded border border-dashed border-paper-edge bg-white p-2 text-sm text-slate-600 transition file:mr-4 file:cursor-pointer file:rounded-sm file:border-0 file:bg-paper file:px-4 file:py-2 file:text-sm file:font-semibold file:text-navy-900 hover:border-gold-400 hover:file:bg-gold-100 focus:border-navy-700 focus:ring-4 focus:ring-navy-700/10 focus:outline-none;
   }
 
   .form-hint {
@@ -183,7 +190,7 @@
 
   /* Feedback ---------------------------------------------------------------- */
   .alert {
-    @apply flex items-start gap-2 rounded-md border px-4 py-3 text-sm;
+    @apply flex items-start gap-2 rounded border px-4 py-3 text-sm;
   }
 
   .alert-success {
@@ -195,19 +202,19 @@
   }
 
   .badge {
-    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap ring-1 ring-inset;
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap ring-1 ring-inset;
   }
 
   .badge-navy {
-    @apply bg-navy-50 text-navy-700 ring-navy-200;
+    @apply bg-navy-50 text-navy-800 ring-navy-200;
   }
 
   .badge-gold {
-    @apply bg-gold-50 text-gold-800 ring-gold-200;
+    @apply bg-gold-50 text-gold-800 ring-gold-300/70;
   }
 
   .badge-green {
-    @apply bg-emerald-50 text-emerald-700 ring-emerald-200;
+    @apply bg-emerald-50 text-emerald-800 ring-emerald-200;
   }
 
   .badge-red {
@@ -215,21 +222,58 @@
   }
 
   .badge-slate {
-    @apply bg-slate-100 text-slate-600 ring-slate-200;
+    @apply bg-paper text-slate-600 ring-paper-edge;
   }
 
   .link {
-    @apply font-medium text-navy-700 underline-offset-4 transition-colors hover:text-navy-900 hover:underline focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-navy-600 focus-visible:outline-none;
+    @apply font-medium text-navy-800 underline-offset-4 transition-colors hover:text-gold-700 hover:underline focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-navy-700 focus-visible:outline-none;
   }
 
-  /* Decoration: hexagon grid echoing the logo mark ------------------------------ */
+  /* Decoration: architectural hexagon lattice ------------------------------- */
   .pattern-hex {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='45' height='78' viewBox='0 0 45 78'%3E%3Cpath d='M22.5 0L45 13v26L22.5 52 0 39V13zM22.5 52v26' fill='none' stroke='%23ffffff' stroke-opacity='0.07' stroke-width='1'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='45' height='78' viewBox='0 0 45 78'%3E%3Cpath d='M22.5 0L45 13v26L22.5 52 0 39V13zM22.5 52v26' fill='none' stroke='%23dac086' stroke-opacity='0.065' stroke-width='1'/%3E%3C/svg%3E");
     background-size: 45px 78px;
   }
 
   .pattern-fade {
-    -webkit-mask-image: radial-gradient(ellipse at center, #000 25%, transparent 75%);
-    mask-image: radial-gradient(ellipse at center, #000 25%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 22%, transparent 74%);
+    mask-image: radial-gradient(ellipse at center, #000 22%, transparent 74%);
+  }
+
+  /* Prestige surfaces & animations ------------------------------------------ */
+  .card-luxury {
+    @apply rounded-lg border border-paper-edge bg-white shadow-[0_1px_2px_rgba(11,17,32,0.03),0_16px_38px_-20px_rgba(11,17,32,0.12)] transition-all duration-300;
+  }
+
+  .card-luxury:hover {
+    @apply -translate-y-0.5 border-gold-300 shadow-[0_6px_16px_rgba(11,17,32,0.04),0_26px_54px_-22px_rgba(11,17,32,0.2)];
+  }
+
+  .hero-enter {
+    animation: heroFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .reveal-base {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
