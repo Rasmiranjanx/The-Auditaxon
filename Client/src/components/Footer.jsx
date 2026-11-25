@@ -1,14 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import {
-  ArrowRight,
-  ArrowUpRight,
-  Clock,
-  LockKeyhole,
-  Mail,
-  MapPin,
-  Phone,
-} from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Clock, LockKeyhole, Mail, MapPin, Phone } from 'lucide-react'
 import siteConfig, { hasValue } from '../config/site'
 import BrandMark from './ui/BrandMark'
 
@@ -68,6 +60,7 @@ const quickLinks = [
   { label: 'About', href: '#about' },
   { label: 'Services', href: '#services' },
   { label: 'Team', href: '#team' },
+  { label: 'Process & FAQ', href: '#approach' },
   { label: 'Careers', href: '#careers' },
   { label: 'Leave a review', href: '#feedback' },
   { label: 'Contact', href: '#contact' },
@@ -130,7 +123,7 @@ const iconClass = 'shrink-0 text-gold-400'
 
 const Footer = () => {
   return (
-    <footer className="bg-navy-950 pt-16 pb-8 text-navy-200">
+    <footer className="border-t border-gold-300/20 bg-navy-950 pt-16 pb-8 text-navy-200">
       <div className="container-page">
         <div className="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,0.7fr)_minmax(0,1fr)_minmax(0,1.5fr)] lg:gap-x-8">
           {/* Brand */}
@@ -256,7 +249,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-navy-300 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-12 flex flex-col gap-2 border-t border-gold-300/15 pt-6 text-xs text-navy-300 sm:flex-row sm:items-center sm:justify-between sm:pr-16">
           <p className="leading-relaxed">
             &copy; {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
             {hasValue(firmRegistrationNumber) && (
@@ -270,7 +263,7 @@ const Footer = () => {
           </p>
           <Link
             to="/login"
-            className="group inline-flex min-h-11 items-center gap-2.5 self-start rounded-md border border-gold-500/60 bg-gold-500/10 px-4 text-sm font-semibold text-gold-300 transition-colors duration-200 hover:border-gold-400 hover:bg-gold-500 hover:text-navy-950 focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 focus-visible:outline-none sm:self-auto"
+            className="group inline-flex min-h-11 items-center gap-2.5 self-start rounded border border-gold-400/50 bg-gold-400/10 px-4 text-sm font-semibold text-gold-300 transition-colors duration-200 hover:border-gold-300 hover:bg-gold-400 hover:text-navy-950 focus-visible:ring-2 focus-visible:ring-gold-300 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 focus-visible:outline-none sm:self-auto"
           >
             <LockKeyhole size={16} aria-hidden="true" />
             Admin login

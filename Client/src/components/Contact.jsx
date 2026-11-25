@@ -1,17 +1,21 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import api from '../lib/api'
 import siteConfig, { hasValue, isFirmOpenNow } from '../config/site'
+import { subscribeToInquiry } from '../lib/inquire'
 import {
   ArrowUpRight,
+  Check,
   CircleAlert,
   CircleCheck,
   Clock,
+  Copy,
   Mail,
   MapPin,
   Phone,
   Send,
 } from 'lucide-react'
 import SectionHeader from './ui/SectionHeader'
+import Reveal from './ui/Reveal'
 
 const InstagramIcon = (props) => (
   <svg
@@ -71,7 +75,6 @@ const socialLinks = [
   { label: 'Facebook', href: siteConfig.socialLinks.facebook, Icon: FacebookIcon },
 ].filter((social) => hasValue(social.href))
 
-// Only confirmed details render; "TODO" placeholders in the site config stay hidden.
 const phoneNumbers = [
   ...new Set([siteConfig.contact.phone, siteConfig.contact.mobile].filter(hasValue)),
 ]
@@ -84,7 +87,6 @@ const officeLines = [
 const mapsUrl = siteConfig.location.googleMapsUrl
 const toTelHref = (number) => `tel:${number.replace(/[^\d+]/g, '')}`
 
-// Address lines wrap only after commas, so phrases such as "Puri Canal Rd" stay together.
 const AddressLine = ({ text }) => (
   <span className="block text-balance">
     {text.split(', ').map((part, index, parts) => (
@@ -103,10 +105,10 @@ const infoLinkClass = 'link -mx-1 -my-2 inline-block px-1 py-2 [overflow-wrap:an
 
 const InfoRow = ({ icon: Icon, label, aside, children }) => (
   <li className="flex items-start gap-4">
-    <span className="icon-tile bg-white">
+    <span className="icon-tile">
       <Icon size={22} strokeWidth={1.75} aria-hidden="true" />
     </span>
-    <div className="min-w-0 pt-0.5">
+    <div className="min-w-0 flex-1 pt-0.5">
       <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
         <p className={infoLabelClass}>{label}</p>
         {aside}
@@ -115,6 +117,43 @@ const InfoRow = ({ icon: Icon, label, aside, children }) => (
     </div>
   </li>
 )
+
+const CopyButton = ({ value, label }) => {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = () => {
+    if (!navigator.clipboard) return
+    navigator.clipboard
+      .writeText(value)
+      .then(() => {
+        setCopied(true)
+        setTimeout(() => setCopied(false), 1800)
+      })
+      .catch(() => {})
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      aria-label={copied ? `${label} copied` : `Copy ${label}`}
+      title={copied ? 'Copied!' : `Copy ${label}`}
+      className="ml-2 inline-flex h-7 items-center gap-1 rounded border border-slate-200 bg-slate-50 px-2 text-xs font-medium text-slate-600 transition-colors hover:border-navy-200 hover:bg-navy-50 hover:text-navy-800 focus-visible:ring-2 focus-visible:ring-navy-600 focus-visible:outline-none"
+    >
+      {copied ? (
+        <>
+          <Check size={12} className="text-emerald-600" aria-hidden="true" />
+          <span className="text-emerald-700">Copied</span>
+        </>
+      ) : (
+        <>
+          <Copy size={12} aria-hidden="true" />
+          <span className="sr-only sm:not-sr-only">Copy</span>
+        </>
+      )}
+    </button>
+  )
+}
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -125,6 +164,17 @@ const Contact = () => {
     message: '',
   })
   const [status, setStatus] = useState({ loading: false, success: false, error: '' })
+  const [subjectHighlighted, setSubjectHighlighted] = useState(false)
+  const nameInputRef = useRef(null)
+
+  useEffect(() => {
+    return subscribeToInquiry((subject) => {
+      setFormData((prev) => ({ ...prev, subject }))
+      setSubjectHighlighted(true)
+      setTimeout(() => setSubjectHighlighted(false), 1600)
+      setTimeout(() => nameInputRef.current?.focus({ preventScroll: true }), 450)
+    })
+  }, [])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -150,11 +200,11 @@ const Contact = () => {
   const openNow = isFirmOpenNow()
 
   return (
-    <section id="contact" className="section bg-paper">
+    <section id="contact" className="section bg-ivory">
       <div className="container-page">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
           {/* Ways to reach the firm */}
-          <div className="lg:col-span-5">
+          <Reveal className="lg:col-span-5">
             <SectionHeader
               align="left"
               eyebrow="Contact"
@@ -164,19 +214,23 @@ const Contact = () => {
 
             <ul className="mt-10 space-y-7">
               <InfoRow icon={Mail} label="Email">
-                <a href={`mailto:${siteConfig.contact.primaryEmail}`} className={infoLinkClass}>
-                  {siteConfig.contact.primaryEmail}
-                </a>
+                <div className="flex flex-wrap items-center gap-y-1">
+                  <a href={`mailto:${siteConfig.contact.primaryEmail}`} className={infoLinkClass}>
+                    {siteConfig.contact.primaryEmail}
+                  </a>
+                  <CopyButton value={siteConfig.contact.primaryEmail} label="email address" />
+                </div>
               </InfoRow>
 
               {phoneNumbers.length > 0 && (
                 <InfoRow icon={Phone} label="Phone">
                   {phoneNumbers.map((number) => (
-                    <span key={number} className="block">
+                    <div key={number} className="flex flex-wrap items-center gap-y-1">
                       <a href={toTelHref(number)} className={infoLinkClass}>
                         {number}
                       </a>
-                    </span>
+                      <CopyButton value={number} label="phone number" />
+                    </div>
                   ))}
                 </InfoRow>
               )}
@@ -232,7 +286,7 @@ const Contact = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`${siteConfig.name} on ${label}`}
-                        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 bg-white text-navy-800 shadow-sm transition-colors duration-200 hover:border-navy-300 hover:bg-navy-50 focus-visible:ring-2 focus-visible:ring-navy-600 focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:outline-none"
+                        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-paper-edge bg-white text-navy-800 shadow-sm transition-colors duration-200 hover:border-gold-300 hover:bg-paper focus-visible:ring-2 focus-visible:ring-navy-700 focus-visible:ring-offset-2 focus-visible:ring-offset-ivory focus-visible:outline-none"
                       >
                         <Icon size={18} />
                       </a>
@@ -241,11 +295,11 @@ const Contact = () => {
                 </ul>
               </div>
             )}
-          </div>
+          </Reveal>
 
           {/* Enquiry form */}
-          <div className="lg:col-span-7">
-            <div className="card p-6 sm:p-8">
+          <Reveal delay={80} className="lg:col-span-7">
+            <div className="card-luxury p-6 sm:p-8">
               <h3 className="font-display text-2xl font-semibold text-ink">Send us a message</h3>
               <p className="mt-2 text-sm text-pretty text-slate-600">
                 All fields are required unless marked optional.
@@ -257,6 +311,7 @@ const Contact = () => {
                     Full name
                   </label>
                   <input
+                    ref={nameInputRef}
                     id="contact-name"
                     type="text"
                     name="name"
@@ -313,7 +368,12 @@ const Contact = () => {
                     placeholder="e.g. GST registration"
                     value={formData.subject}
                     onChange={handleChange}
-                    className="form-control"
+                    className={[
+                      'form-control',
+                      subjectHighlighted && 'border-gold-500 ring-4 ring-gold-500/20',
+                    ]
+                      .filter(Boolean)
+                      .join(' ')}
                   />
                 </div>
 
@@ -358,21 +418,42 @@ const Contact = () => {
                 </div>
               </form>
             </div>
-          </div>
+          </Reveal>
         </div>
 
         {/* Office location: embedded Google Maps listing for the firm */}
         {hasValue(siteConfig.location.googleMapsEmbedUrl) && (
-          <div className="card mt-12 overflow-hidden lg:mt-16">
-            <iframe
-              src={siteConfig.location.googleMapsEmbedUrl}
-              title="Map showing The Auditaxon office in Hansapal, Bhubaneswar"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              allowFullScreen
-              className="block h-72 w-full border-0 sm:h-96"
-            />
-          </div>
+          <Reveal delay={100}>
+            <div className="card-luxury mt-12 overflow-hidden lg:mt-16">
+              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 bg-paper px-6 py-4">
+                <div className="flex items-center gap-3">
+                  <MapPin size={18} className="shrink-0 text-gold-600" aria-hidden="true" />
+                  <p className="text-sm font-medium text-ink">
+                    {siteConfig.name} · {siteConfig.location.city}, {siteConfig.location.state}
+                  </p>
+                </div>
+                {hasValue(mapsUrl) && (
+                  <a
+                    href={mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs font-semibold tracking-wide text-navy-800 uppercase transition-colors hover:text-gold-700"
+                  >
+                    Open in Google Maps
+                    <ArrowUpRight size={14} aria-hidden="true" />
+                  </a>
+                )}
+              </div>
+              <iframe
+                src={siteConfig.location.googleMapsEmbedUrl}
+                title="Map showing The Auditaxon office in Hansapal, Bhubaneswar"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+                className="block h-72 w-full border-0 sm:h-96"
+              />
+            </div>
+          </Reveal>
         )}
       </div>
     </section>
